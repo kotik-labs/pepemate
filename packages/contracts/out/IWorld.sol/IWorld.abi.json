@@ -1,37 +1,6 @@
 [
   {
     "type": "function",
-    "name": "app__move",
-    "inputs": [
-      {
-        "name": "entity",
-        "type": "bytes32",
-        "internalType": "Entity"
-      },
-      {
-        "name": "direction",
-        "type": "uint8",
-        "internalType": "enum Direction"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "app__spawn",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "entity",
-        "type": "bytes32",
-        "internalType": "Entity"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "batchCall",
     "inputs": [
       {
@@ -630,6 +599,125 @@
         "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__createSession",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "gameMode",
+        "type": "uint8",
+        "internalType": "enum GameMode"
+      },
+      {
+        "name": "teamMode",
+        "type": "uint8",
+        "internalType": "enum TeamMode"
+      },
+      {
+        "name": "map",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__joinSession",
+    "inputs": [
+      {
+        "name": "session",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "playerIndex",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__leaveSession",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__move",
+    "inputs": [
+      {
+        "name": "direction",
+        "type": "uint8",
+        "internalType": "enum Direction"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__placeBomb",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "session",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "tileX",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
+        "name": "tileY",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__spawn",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__triggerBomb",
+    "inputs": [
+      {
+        "name": "session",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "tileX",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
+        "name": "tileY",
+        "type": "uint32",
+        "internalType": "uint32"
       }
     ],
     "outputs": [],

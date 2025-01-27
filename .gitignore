@@ -14,3 +14,6 @@ out/*
 out/IWorld.sol/*
 !out/IWorld.sol/IWorld.abi.json
 !out/IWorld.sol/IWorld.abi.d.json.ts
+
+
+packages/art

@@ -1,5 +1,5 @@
 {
-  "name": "mud-template-react",
+  "name": "pepemate",
   "private": true,
   "scripts": {
     "build": "pnpm recursive run build",
@@ -12,10 +12,10 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.2.17-f52b1476f04ce0be68691e3b021a81e0fb9cce99",
-    "@latticexyz/common": "2.2.17-f52b1476f04ce0be68691e3b021a81e0fb9cce99",
-    "@latticexyz/explorer": "2.2.17-f52b1476f04ce0be68691e3b021a81e0fb9cce99",
-    "@latticexyz/store-indexer": "2.2.17-f52b1476f04ce0be68691e3b021a81e0fb9cce99",
+    "@latticexyz/cli": "2.2.17-452d3e53db2768f2e296ea7560c9bdd6560cd797",
+    "@latticexyz/common": "2.2.17-452d3e53db2768f2e296ea7560c9bdd6560cd797",
+    "@latticexyz/explorer": "2.2.17-452d3e53db2768f2e296ea7560c9bdd6560cd797",
+    "@latticexyz/store-indexer": "2.2.17-452d3e53db2768f2e296ea7560c9bdd6560cd797",
     "@types/debug": "4.1.7",
     "@typescript-eslint/eslint-plugin": "7.1.1",
     "@typescript-eslint/parser": "7.1.1",

@@ -1,0 +1,70 @@
+import { Entity } from "@latticexyz/recs";
+import { TileAnimationKey, Tileset } from "./artTypes/world";
+import { Animations, Direction, Sprites } from "./types";
+
+export const ZERO_ENTITY = "0x0000000000000000000000000000000000000000000000000000000000000000" as Entity;
+
+export const ANIMATION_INTERVAL = 80;
+export const TILE_HEIGHT = 16;
+export const TILE_WIDTH = 16;
+export const MAX_WIDTH = 15;
+export const MAX_HEIGHT = 15;
+export const DEFAULT_SCALE = 3;
+
+export const MAX_TICKS_PER_BLOCK = 12;
+export const MAX_TICK_BLOCK_DELAY = 1;
+
+
+export const DIR_LOOKUP = [
+  [-1, 0],
+  [1, 0],
+  [0, -1],
+  [0, 1],
+] as const;
+
+export const TILESET = [
+  Tileset.Void,
+  Tileset.Grass,
+  Tileset.Block,
+  Tileset.Wall,
+  Tileset.RangeUp,
+  Tileset.SpeedUp,
+  Tileset.BombsUp,
+
+  Tileset.Spawner,
+  Tileset.Spawner,
+  Tileset.Spawner,
+  Tileset.Spawner,
+] as const;
+
+export const AnimatedTiles: Partial<Record<Tileset, TileAnimationKey>> = {
+  [Tileset.Bomb]: TileAnimationKey.Bomb,
+  [Tileset.Spawner]: TileAnimationKey.Spawner,
+  [Tileset.RangeUp]: TileAnimationKey.RangeUp,
+  [Tileset.SpeedUp]: TileAnimationKey.SpeedUp,
+  [Tileset.BombsUp]: TileAnimationKey.BombsUp,
+};
+
+export const MOCK_SESSION =
+  "0x1234000000000000000000000000000000000000000000000000000000000000";
+
+export const PlayerAnimationsLookup = {
+  [Sprites.Player]: {
+    [Direction.Up]: Animations.PlayerUp,
+    [Direction.Down]: Animations.PlayerDown,
+    [Direction.Left]: Animations.PlayerLeft,
+    [Direction.Right]: Animations.PlayerRight,
+  },
+  [Sprites.PlayerA]: {
+    [Direction.Up]: Animations.PlayerAUp,
+    [Direction.Down]: Animations.PlayerADown,
+    [Direction.Left]: Animations.PlayerALeft,
+    [Direction.Right]: Animations.PlayerARight,
+  },
+  [Sprites.PlayerB]: {
+    [Direction.Up]: Animations.PlayerBUp,
+    [Direction.Down]: Animations.PlayerBDown,
+    [Direction.Left]: Animations.PlayerBLeft,
+    [Direction.Right]: Animations.PlayerBRight,
+  },
+} as const;
