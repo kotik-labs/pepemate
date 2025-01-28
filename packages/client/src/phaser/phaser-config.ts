@@ -8,12 +8,20 @@ import {
 } from "@latticexyz/phaserx";
 import worldTileset from "@/../public/assets/tilesets/world.png";
 import { TileAnimations, Tileset } from "@/artTypes/world";
-import { ANIMATION_INTERVAL, TILE_HEIGHT, TILE_WIDTH, DEFAULT_SCALE } from "@/constants";
+import {
+  ANIMATION_INTERVAL,
+  TILE_HEIGHT,
+  TILE_WIDTH,
+  DEFAULT_SCALE,
+  MAX_WIDTH,
+  MAX_HEIGHT,
+} from "@/constants";
 import { Sprites, Assets, Maps, Scenes } from "@/types";
 import { AllAnimations } from "@/artTypes/animations";
 
 const mainMap = defineMapConfig({
-  chunkSize: TILE_WIDTH * 16, // tile size * tile amount
+  // chunkSize: TILE_WIDTH * TILE_HEIGHT, // tile size * tile amount
+  chunkSize: TILE_WIDTH * MAX_WIDTH * MAX_HEIGHT,
   tileWidth: TILE_WIDTH,
   tileHeight: TILE_HEIGHT,
   backgroundTile: [Tileset.Void],
@@ -51,10 +59,6 @@ export const phaserConfig = {
         [Maps.Main]: mainMap,
       },
       sprites: {
-        [Sprites.Player]: {
-          assetKey: Assets.MainAtlas,
-          frame: "sprites/player/move-down/1.png",
-        },
         [Sprites.PlayerA]: {
           assetKey: Assets.MainAtlas,
           frame: "sprites/playerA/move-down/1.png",
@@ -62,6 +66,14 @@ export const phaserConfig = {
         [Sprites.PlayerB]: {
           assetKey: Assets.MainAtlas,
           frame: "sprites/playerB/move-down/1.png",
+        },
+        [Sprites.PlayerC]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/playerC/move-down/1.png",
+        },
+        [Sprites.PlayerD]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/playerD/move-down/1.png",
         },
       },
       animations: AllAnimations,
@@ -77,7 +89,8 @@ export const phaserConfig = {
   scale: defineScaleConfig({
     parent: "phaser-game",
     zoom: DEFAULT_SCALE,
-    mode: Phaser.Scale.CENTER_BOTH,
+    mode: Phaser.Scale.NONE,
+    autoRound: true
   }),
   cameraConfig: defineCameraConfig({
     pinchSpeed: 1,
@@ -85,5 +98,5 @@ export const phaserConfig = {
     maxZoom: 1,
     minZoom: 1,
   }),
-  cullingChunkSize: TILE_HEIGHT * 16,
+  cullingChunkSize: 1,
 };

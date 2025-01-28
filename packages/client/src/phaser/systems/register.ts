@@ -1,6 +1,6 @@
 import { PhaserLayer } from "../create-phaser-layer";
 import { createCamera } from "./camera-system";
-import { createCursor } from "./cursor-system";
+// import { createCursor } from "./cursor-system";
 import { createTilemapSystem } from "./tilemap-system";
 import { createControlSystem } from "./controls-system";
 import { createPlayerSystem } from "./player-system";

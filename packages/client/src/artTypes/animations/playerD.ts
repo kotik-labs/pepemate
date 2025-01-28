@@ -1,44 +1,44 @@
 import { Animations, Assets } from "../../types";
 
-export const playerAAnimations = [
+export const playerDAnimations = [
   {
-    key: Animations.PlayerAUp,
+    key: Animations.PlayerDUp,
     assetKey: Assets.MainAtlas,
     startFrame: 0,
     endFrame: 3,
     frameRate: 6,
     repeat: 0,
-    prefix: "sprites/playerA/move-up/",
+    prefix: "sprites/playerD/move-up/",
     suffix: ".png",
   },
   {
-    key: Animations.PlayerADown,
+    key: Animations.PlayerDDown,
     assetKey: Assets.MainAtlas,
     startFrame: 0,
     endFrame: 3,
     frameRate: 6,
     repeat: 0,
-    prefix: "sprites/playerA/move-down/",
+    prefix: "sprites/playerD/move-down/",
     suffix: ".png",
   },
   {
-    key: Animations.PlayerALeft,
+    key: Animations.PlayerDLeft,
     assetKey: Assets.MainAtlas,
     startFrame: 0,
     endFrame: 3,
     frameRate: 6,
     repeat: 0,
-    prefix: "sprites/playerA/move-left/",
+    prefix: "sprites/playerD/move-left/",
     suffix: ".png",
   },
   {
-    key: Animations.PlayerARight,
+    key: Animations.PlayerDRight,
     assetKey: Assets.MainAtlas,
     startFrame: 0,
     endFrame: 3,
     frameRate: 6,
     repeat: 0,
-    prefix: "sprites/playerA/move-right/",
+    prefix: "sprites/playerD/move-right/",
     suffix: ".png",
   },
 ] as const;

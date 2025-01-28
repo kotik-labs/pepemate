@@ -8,15 +8,18 @@
  * lets you add user defined components, which may or may not have
  * an onchain component.
  */
-import { defineComponent, Type } from "@latticexyz/recs";
-import { SetupNetworkResult } from "./setupNetwork";
+import { defineComponent, Type, World } from "@latticexyz/recs";
+import { SystemComponents } from "./recs";
 
 export type ClientComponents = ReturnType<typeof createClientComponents>;
 
 export function createClientComponents({
   world,
   components,
-}: SetupNetworkResult) {
+}: {
+  world: World;
+  components: SystemComponents;
+}) {
   return {
     ...components,
     // add your client components or overrides here

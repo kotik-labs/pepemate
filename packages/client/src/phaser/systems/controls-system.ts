@@ -2,6 +2,19 @@ import { Direction } from "@/types";
 import { PhaserLayer } from "../create-phaser-layer";
 import { getComponentValue, defineEnterSystem, Has } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Key } from "@latticexyz/phaserx";
+
+const INPUTS = ["Up", "Down", "Left", "Right", "Primary", "Secondary"] as const;
+type Inputs = (typeof INPUTS)[number];
+
+const KeyBindings: Record<Inputs, Key> = {
+  Up: "UP",
+  Down: "DOWN",
+  Left: "LEFT",
+  Right: "RIGHT",
+  Primary: "Z",
+  Secondary: "X",
+};
 
 export function createControlSystem(layer: PhaserLayer) {
   const {
@@ -17,7 +30,6 @@ export function createControlSystem(layer: PhaserLayer) {
   } = layer;
 
   defineEnterSystem(world, [Has(SessionOf)], ({ entity }) => {
-    console.log({ entity, playerEntity });
     if (entity !== playerEntity) return;
 
     const session = getComponentValue(SessionOf, entity);
@@ -37,50 +49,54 @@ export function createControlSystem(layer: PhaserLayer) {
     //   spawn(x, y);
     // });
 
-    const dash = (direction: Direction, n: number) =>
-      batchMove(Array(n).fill(direction));
-
     input.onKeyPress(
-      (key) => key.has("SPACE"),
+      (key) => Object.values(KeyBindings).some((k) => key.has(k)),
       () => spawn()
     );
 
+    // UP movements
     input.onKeyPress(
-      (key) => key.has("UP") && key.has("Z"),
-      () => dash(Direction.Up, 4)
+      (key) => key.has(KeyBindings.Up) && key.has(KeyBindings.Secondary),
+      () => batchMove(Direction.Up, 4)
     );
     input.onKeyPress(
-      (key) => key.has("LEFT") && key.has("Z"),
-      () => dash(Direction.Left, 4)
-    );
-    input.onKeyPress(
-      (key) => key.has("DOWN") && key.has("Z"),
-      () => dash(Direction.Down, 4)
-    );
-    input.onKeyPress(
-      (key) => key.has("RIGHT") && key.has("Z"),
-      () => dash(Direction.Right, 4)
-    );
-
-    input.onKeyPress(
-      (key) => key.has("UP") && !key.has("Z"),
+      (key) => key.has(KeyBindings.Up) && !key.has(KeyBindings.Secondary),
       () => move(Direction.Up)
     );
+
+    // LEFT movements
     input.onKeyPress(
-      (key) => key.has("LEFT") && !key.has("Z"),
+      (key) => key.has(KeyBindings.Left) && key.has(KeyBindings.Secondary),
+      () => batchMove(Direction.Left, 4)
+    );
+    input.onKeyPress(
+      (key) => key.has(KeyBindings.Left) && !key.has(KeyBindings.Secondary),
       () => move(Direction.Left)
     );
+
+    // DOWN movements
     input.onKeyPress(
-      (key) => key.has("DOWN") && !key.has("Z"),
-      () => move(Direction.Down)
+      (key) => key.has(KeyBindings.Down) && key.has(KeyBindings.Secondary),
+      () => batchMove(Direction.Down, 4)
     );
     input.onKeyPress(
-      (key) => key.has("RIGHT") && !key.has("Z"),
+      (key) => key.has(KeyBindings.Down) && !key.has(KeyBindings.Secondary),
+      () => move(Direction.Down)
+    );
+
+    // RIGHT movements
+    input.onKeyPress(
+      (key) => key.has(KeyBindings.Right) && key.has(KeyBindings.Secondary),
+      () => batchMove(Direction.Right, 4)
+    );
+    input.onKeyPress(
+      (key) => key.has(KeyBindings.Right) && !key.has(KeyBindings.Secondary),
       () => move(Direction.Right)
     );
 
+    // BOMB
     input.onKeyPress(
-      (key) => key.has("X"),
+      (key) => key.has(KeyBindings.Primary),
       () => placeBomb()
     );
   });

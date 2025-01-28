@@ -4,3 +4,4 @@ import config from "contracts/mud.config";
 
 export const world = createWorld();
 export const { syncAdapter, components } = createSyncAdapter({ world, config });
+export type SystemComponents = typeof components;

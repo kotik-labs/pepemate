@@ -9,7 +9,7 @@ export const TILE_HEIGHT = 16;
 export const TILE_WIDTH = 16;
 export const MAX_WIDTH = 15;
 export const MAX_HEIGHT = 15;
-export const DEFAULT_SCALE = 3;
+export const DEFAULT_SCALE = 2.6;
 
 export const MAX_TICKS_PER_BLOCK = 12;
 export const MAX_TICK_BLOCK_DELAY = 1;
@@ -49,12 +49,6 @@ export const MOCK_SESSION =
   "0x1234000000000000000000000000000000000000000000000000000000000000";
 
 export const PlayerAnimationsLookup = {
-  [Sprites.Player]: {
-    [Direction.Up]: Animations.PlayerUp,
-    [Direction.Down]: Animations.PlayerDown,
-    [Direction.Left]: Animations.PlayerLeft,
-    [Direction.Right]: Animations.PlayerRight,
-  },
   [Sprites.PlayerA]: {
     [Direction.Up]: Animations.PlayerAUp,
     [Direction.Down]: Animations.PlayerADown,
@@ -66,5 +60,17 @@ export const PlayerAnimationsLookup = {
     [Direction.Down]: Animations.PlayerBDown,
     [Direction.Left]: Animations.PlayerBLeft,
     [Direction.Right]: Animations.PlayerBRight,
+  },
+  [Sprites.PlayerC]: {
+    [Direction.Up]: Animations.PlayerCUp,
+    [Direction.Down]: Animations.PlayerCDown,
+    [Direction.Left]: Animations.PlayerCLeft,
+    [Direction.Right]: Animations.PlayerCRight,
+  },
+  [Sprites.PlayerD]: {
+    [Direction.Up]: Animations.PlayerDUp,
+    [Direction.Down]: Animations.PlayerDDown,
+    [Direction.Left]: Animations.PlayerDLeft,
+    [Direction.Right]: Animations.PlayerDRight,
   },
 } as const;

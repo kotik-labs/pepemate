@@ -2,16 +2,6 @@ import { Animations, Assets } from "../../types";
 
 export const playerBAnimations = [
   {
-    key: Animations.PlayerBDeath,
-    assetKey: Assets.MainAtlas,
-    startFrame: 0,
-    endFrame: 3,
-    frameRate: 6,
-    repeat: 0,
-    prefix: "sprites/player/death/",
-    suffix: ".png",
-  },
-  {
     key: Animations.PlayerBUp,
     assetKey: Assets.MainAtlas,
     startFrame: 0,

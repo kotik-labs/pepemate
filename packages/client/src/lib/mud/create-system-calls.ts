@@ -10,9 +10,8 @@
  */
 
 import { getComponentValue } from "@latticexyz/recs";
-import { resourceToHex } from "@latticexyz/common";
 import { ClientComponents } from "./client-components";
-import { Hex, parseAbi, encodeFunctionData } from "viem";
+import { Hex } from "viem";
 import { NetworkSetupResult } from "../../hooks/use-network-setup";
 import { Direction } from "@/types";
 
@@ -71,7 +70,7 @@ export function createSystemCalls(
       session,
       playerIndex,
     ]);
-    console.log({ receipt: await waitForTransaction(tx) });
+    await waitForTransaction(tx);
   };
 
   const leaveSession = async () => {
@@ -79,31 +78,17 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
-  const batchMove = async (directions: Direction[]) => {
+  const batchMove = async (direction: Direction, steps: number) => {
     const position = getComponentValue(Position, playerEntity);
     if (!position || (position.x === 0 && position.y === 0)) {
       console.warn("cannot move without a player position, not yet spawned?");
       return;
     }
 
-    const PlayerSystemId = resourceToHex({
-      type: "system",
-      namespace: "pepemate",
-      name: "PlayerSystem",
-    });
-
-    const tx = await worldContract.write.batchCall([
-      directions.map((direction) => ({
-        systemId: PlayerSystemId,
-        callData: encodeFunctionData({
-          abi: parseAbi([
-            "function move(uint8 direction) public returns (uint32 x, uint32 y)",
-          ]),
-          args: [direction],
-        }),
-      })),
+    const tx = await worldContract.write.pepemate__move([
+      direction,
+      BigInt(steps),
     ]);
-
     await waitForTransaction(tx);
   };
 

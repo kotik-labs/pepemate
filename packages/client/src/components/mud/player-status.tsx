@@ -10,6 +10,8 @@ import { Card } from "@/components/ui/card";
 
 import playerA from "../../../public/playerA.png";
 import playerB from "../../../public/playerB.png";
+import playerC from "../../../public/playerC.png";
+import playerD from "../../../public/playerD.png";
 import { MAX_TICKS_PER_BLOCK } from "@/constants";
 import { cn, shorten } from "@/lib/utils";
 
@@ -54,7 +56,7 @@ export const IconStatus = ({
   );
 };
 
-const playerImages = [playerA, playerB, playerA, playerB];
+const playerImages = [playerA, playerB, playerC, playerD];
 
 export const PlayerStatus = ({
   networkLayer,
@@ -86,8 +88,8 @@ export const PlayerStatus = ({
       <Card
         onClick={() => joinSession(session, playerIndex)}
         className={cn(
-          "opacity-50 hover:opacity-100",
-          "w-1/4 pr-2 border-0 bg-black rounded-none relative overflow-hidden"
+          "opacity-50  hover:opacity-100",
+          "w-36 border-0 bg-black rounded-none relative overflow-hidden cursor-pointer"
         )}
       >
         <div className="flex items-center justify-center gap-2">
@@ -97,7 +99,7 @@ export const PlayerStatus = ({
 
           <div className="flex-1 flex flex-col ">
             <div className="flex-1 space-y-4 text-center text-yellow-500">
-              <span className="text-xl font-bold">START</span>
+              <span className="xs:text-md text-xs font-bold">START</span>
             </div>
           </div>
         </div>
@@ -128,26 +130,29 @@ export const PlayerStatus = ({
   const stamina = (tickCount / MAX_TICKS_PER_BLOCK) * 100;
 
   return (
-    <Card className="w-1/4 pr-2 border-0 bg-black rounded-none relative overflow-hidden">
+    <Card className=" w-36 border-0 bg-black rounded-none relative overflow-hidden">
       <div className="flex items-start gap-2">
         <Avatar className="w-8 h-8 rounded border-2 border-yellow-500">
           <AvatarImage src={playerImage} className="object-cover" />
         </Avatar>
 
-        <div className="flex-1 flex flex-col gap-1">
-          <div className="flex flex-row justify-between items-center">
-            <span className="text-xs font-bold text-white">
+        <div className="flex-1 flex flex-col gap-1 max-w-full">
+          <div className="flex items-center gap-1">
+            <span className="text-[0.5rem] max-w-24 truncate text-white">
               {shorten(address)}
             </span>
-            {isSelf ? (
-              <LogOut
-                onClick={() => leaveSession()}
-                className="h-4 w-4 text-red-500 hover:text-red-800 cursor-pointer"
-              />
-            ) : null}
+            <LogOut
+              onClick={() => (isSelf ? leaveSession() : null)}
+              className={cn(
+                "h-3 w-3 text-red-500 hover:text-red-800 cursor-pointer",
+                !isSelf
+                  ? "text-transparent hover:text-transparent cursor-default"
+                  : null
+              )}
+            />
           </div>
 
-          <div className="flex items-center px-0.5">
+          <div className="flex items-center">
             {/* <IconStatus
               icon={Heart}
               iconClassName={"text-red-500"}

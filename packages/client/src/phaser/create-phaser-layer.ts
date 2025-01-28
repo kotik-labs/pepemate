@@ -18,12 +18,13 @@ export const createPhaserLayer = async (
     dispose: disposePhaser,
   } = await createPhaserEngine(phaserConfig);
   world.registerDisposer(disposePhaser);
-
   const layer = {
     game,
     scenes,
     network,
   };
+
+  console.log({layer})
 
   registerSystems(layer);
 

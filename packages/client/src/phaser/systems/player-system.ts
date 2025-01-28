@@ -32,7 +32,7 @@ const directions = (p0: Coord, p1: Coord) => {
 export function createPlayerSystem(layer: PhaserLayer) {
   const {
     scenes: {
-      Main: { objectPool, config },
+      Main: { objectPool, phaserScene, config },
     },
     network: {
       world,
@@ -93,13 +93,21 @@ export function createPlayerSystem(layer: PhaserLayer) {
         objectPool.get(entity, "Sprite").setComponent({
           id: entity,
           once: (gameObject) => {
-            gameObject.setPosition(coord.x, coord.y);
+            // gameObject.setPosition(coord.x, coord.y);
             gameObject.setOrigin(0.5, 16 / 24);
             gameObject.setScale(1);
             const direction = dirX || dirY;
 
             if (direction !== null) {
               gameObject.play(moveAnimations[direction], true);
+              phaserScene.tweens.add({
+                targets: gameObject,
+                x: { start: prevCoord.x, to: coord.x },
+                y: { start: prevCoord.y, to: coord.y },
+                ease: "Linear",
+                duration: 50,
+                repeat: 0,
+              });
               return;
             }
 

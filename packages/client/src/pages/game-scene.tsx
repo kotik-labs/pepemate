@@ -5,11 +5,18 @@ import { range } from "lodash";
 import { Hex } from "viem";
 
 import { useNetworkLayer } from "@/hooks/use-network-layer";
-import { useWorldContract } from "@/hooks/use-world-contract";
+import { useWorldContract, WorldContract } from "@/hooks/use-world-contract";
 import { PlayerStatus } from "@/components/mud/player-status";
 import { PhaserWrapper } from "@/components/mud/phaser-wrapper";
+import { cn } from "@/lib/utils";
+import { NotConnected } from "@/components/mud/not-connected";
 
-export const GameScene = ({ session, worldContract }: any) => {
+type Props = {
+  worldContract: WorldContract;
+  session: Hex;
+};
+
+export const GameScene = ({ session, worldContract }: Props) => {
   const networkLayer = useNetworkLayer(worldContract);
   setComponent(networkLayer.components.LocalSession, singletonEntity, {
     id: session,
@@ -20,15 +27,20 @@ export const GameScene = ({ session, worldContract }: any) => {
     <PlayerStatus
       key={i}
       playerIndex={i}
-      session={session as Hex}
+      session={session}
       networkLayer={networkLayer}
     />
   ));
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
-      <div className={"rounded-lg p-4 w-max bg-black"}>
-        <div className="flex flex-row pb-4 gap-4 justify-between">
+      <div
+        className={cn(
+          "rounded-lg min-w-96 w-max bg-black flex flex-col items-center",
+          "gap-3 p-3"
+        )}
+      >
+        <div className={cn("w-full flex justify-between", "gap-2")}>
           {playerStatuses}
         </div>
         <PhaserWrapper networkLayer={networkLayer} />
@@ -41,8 +53,8 @@ export function Game() {
   const { session } = useParams();
   const worldContract = useWorldContract();
 
-  if (!session) return;
-  if (!worldContract) return;
+  if (!worldContract) return <NotConnected />;
+  if (!session) return <NotConnected />;
 
-  return <GameScene session={session} worldContract={worldContract} />;
+  return <GameScene session={session as Hex} worldContract={worldContract} />;
 }

@@ -14,23 +14,25 @@ export enum Maps {
 }
 
 export enum Animations {
-  PlayerDeath = "PlayerDeath",
-  PlayerUp = "PlayerUp",
-  PlayerDown = "PlayerDown",
-  PlayerRight = "PlayerRight",
-  PlayerLeft = "PlayerLeft",
-
-  PlayerADeath = "PlayerADeath",
   PlayerAUp = "PlayerAUp",
   PlayerADown = "PlayerADown",
   PlayerARight = "PlayerARight",
   PlayerALeft = "PlayerALeft",
 
-  PlayerBDeath = "PlayerBDeath",
   PlayerBUp = "PlayerBUp",
   PlayerBDown = "PlayerBDown",
   PlayerBRight = "PlayerBRight",
   PlayerBLeft = "PlayerBLeft",
+
+  PlayerCUp = "PlayerCUp",
+  PlayerCDown = "PlayerCDown",
+  PlayerCRight = "PlayerCRight",
+  PlayerCLeft = "PlayerCLeft",
+
+  PlayerDUp = "PlayerDUp",
+  PlayerDDown = "PlayerDDown",
+  PlayerDRight = "PlayerDRight",
+  PlayerDLeft = "PlayerDLeft",
 
   ExplosionCenter = "ExplosionCenter",
   ExplosionUp = "ExplosionUp",
@@ -44,7 +46,6 @@ export enum Animations {
 }
 
 export enum Sprites {
-  Player,
   PlayerA,
   PlayerB,
   PlayerC,
