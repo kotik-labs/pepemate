@@ -65,24 +65,34 @@ contract PostDeploy is Script {
         ];
 
         (uint32[4] memory spawnIndexes, bytes memory terrain) = LibUtils.pack(mapDataA);
-        terrain = LibTilemap.fillWalls(spawnIndexes, terrain, 50, 123123);
-        bytes32 entityKey = LibTilemap.entityKey(terrain);
+        bytes32 mapKey = LibTilemap.entityKey(terrain);
 
         // Start broadcasting transactions from the deployer account
         vm.startBroadcast(deployerPrivateKey);
         // ---------------------------------------------------------
-        Map.set(entityKey, spawnIndexes, terrain);
+        Map.set(mapKey, spawnIndexes, terrain);
 
         IWorld(worldAddress).pepemate__createSession(
-            bytes32(hex"1234"), GameMode.Trainning, TeamMode.AllInOne, entityKey
+            keccak256(hex"01"), GameMode.Trainning, TeamMode.AllInOne, mapKey
         );
-        // IWorld(worldAddress).pepemate__joinSession(bytes32(hex"1234"), 0);
 
-        // IWorld(worldAddress).pepemate__createSession(
-        //     bytes32(hex"123412"), GameMode.Trainning, TeamMode.AllInOne, entityKey
-        // );
+        IWorld(worldAddress).pepemate__createSession(
+            keccak256(hex"02"), GameMode.Trainning, TeamMode.AllInOne, mapKey
+        );
+
+        IWorld(worldAddress).pepemate__createSession(
+            keccak256(hex"03"), GameMode.Trainning, TeamMode.AllInOne, mapKey
+        );
+
+        IWorld(worldAddress).pepemate__createSession(
+            keccak256(hex"04"), GameMode.Trainning, TeamMode.AllInOne, mapKey
+        );
+
+        IWorld(worldAddress).pepemate__createSession(
+            keccak256(hex"05"), GameMode.Trainning, TeamMode.AllInOne, mapKey
+        );
+
         // ---------------------------------------------------------
         vm.stopBroadcast();
-       
     }
 }

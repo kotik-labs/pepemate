@@ -17,36 +17,24 @@ import {
     SessionData
 } from "../codegen/index.sol";
 import {Direction, EntityType, TileType} from "../codegen/common.sol";
-import {
-    TILE_SIZE,
-    BASE_SPEED,
-    BASE_BOMB_COUNT,
-    BASE_BOMB_RANGE,
-    TILE_HALF,
-    MOVE_COST
-} from "../constants.sol";
+import {TILE_SIZE, BASE_SPEED, BASE_BOMB_COUNT, BASE_BOMB_RANGE, TILE_HALF, MOVE_COST} from "../constants.sol";
 
 function min(uint32 a, uint32 b) pure returns (uint32) {
     return a > b ? b : a;
 }
 
-contract PlayerSystem is System {
-    function spawn() public {
-        address owner = _msgSender();
-        bytes32 entity = LibPlayer.entityKey(owner);
-        require(!Player.get(entity), "Player is alive");
-
-        bytes32 session = SessionOf.get(entity);
-        uint8 index = PlayerIndex.get(entity);
-        require(session != bytes32(0), "Session not found");
-        require(index < 4, "invalid player index");
-
-        uint32[4] memory spawnIndexes = Session.getSpawnIndexes(session);
-        (uint32 tileX, uint32 tileY) = LibTilemap.indexToCoord(spawnIndexes[index]);
-        _initPlayer(session, entity, tileX, tileY);
+contract MovementSystem is System {
+    function move(Direction direction) public {
+        _move(direction);
     }
 
-    function move(Direction direction) public {
+    function move(Direction direction, uint256 steps) public {
+        for (uint256 i; i < steps; ++i) {
+            _move(direction);
+        }
+    }
+
+    function _move(Direction direction) internal {
         address owner = _msgSender();
         bytes32 entity = LibPlayer.entityKey(owner);
         require(Player.get(entity), "Player is dead");
@@ -79,28 +67,7 @@ contract PlayerSystem is System {
         TileLookup.set(session, oldX, oldY, EntityType.Player, bytes32(0));
     }
 
-    function _initPlayer(bytes32 session, bytes32 entity, uint32 tileX, uint32 tileY)
-        internal
-    {
-        _resetLookup(session, entity);
-        (uint32 x, uint32 y) = LibPlayer.placePlayer(tileX, tileY);
-
-        Player.set(entity, true);
-        // Speed.set(entity, BASE_SPEED);
-        BombCount.set(entity, BASE_BOMB_COUNT);
-        BombUsed.set(entity, 0);
-        FireCount.set(entity, BASE_BOMB_RANGE);
-        Position.set(entity, x, y);
-        TileLookup.set(session, tileX, tileY, EntityType.Player, entity);
-    }
-
-    function _checkPowerups(
-        bytes32 session,
-        bytes32 entity,
-        bytes memory map,
-        uint32 tileX,
-        uint32 tileY
-    ) internal {
+    function _checkPowerups(bytes32 session, bytes32 entity, bytes memory map, uint32 tileX, uint32 tileY) internal {
         TileType powerUp;
         (powerUp, map) = LibTilemap.pickupPowerup(map, tileX, tileY);
         if (powerUp == TileType.None) return;
@@ -129,13 +96,11 @@ contract PlayerSystem is System {
         blocked = otherPlayer != bytes32(0) && otherPlayer != player;
     }
 
-    function _checkBomb(
-        bytes32 session,
-        uint32 tileX,
-        uint32 tileY,
-        uint32 bombX,
-        uint32 bombY
-    ) internal view returns (bool isBomb) {
+    function _checkBomb(bytes32 session, uint32 tileX, uint32 tileY, uint32 bombX, uint32 bombY)
+        internal
+        view
+        returns (bool isBomb)
+    {
         bytes32 bomb = TileLookup.get(session, tileX, tileY, EntityType.Bomb);
         if (bombX == tileX && bombY == tileY) return false;
         isBomb = bomb != bytes32(0);

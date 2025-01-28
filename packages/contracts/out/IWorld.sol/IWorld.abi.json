@@ -672,6 +672,24 @@
   },
   {
     "type": "function",
+    "name": "pepemate__move",
+    "inputs": [
+      {
+        "name": "direction",
+        "type": "uint8",
+        "internalType": "enum Direction"
+      },
+      {
+        "name": "steps",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "pepemate__placeBomb",
     "inputs": [],
     "outputs": [
