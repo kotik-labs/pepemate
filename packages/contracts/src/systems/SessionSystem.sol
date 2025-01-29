@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {LibUtils, LibBitmap, LibPlayer, LibTilemap, LibTile} from "../libraries/Libraries.sol";
+import {LibUtils, LibBitmap, LibPlayer, LibTilemap, LibTile, LibTick} from "../libraries/Libraries.sol";
 import {Direction, SessionStatus, EntityType} from "../codegen/common.sol";
 import {
     Player,
@@ -60,8 +60,8 @@ contract SessionSystem is System {
         SessionState.setPlayerBitmap(session, uint8(LibBitmap.set(playerBitmap, playerIndex)));
 
         Session.set(entity, session);
-        // Owner.set(entity, _msgSender());
         PlayerIndex.set(entity, playerIndex);
+        LibTick.update(entity, 0);
     }
 
     function leaveSession() public {

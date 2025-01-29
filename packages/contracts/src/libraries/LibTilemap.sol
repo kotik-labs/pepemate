@@ -41,6 +41,9 @@ library LibTilemap {
         for (uint32 i = 0; i < maxWalls;) {
             (rng, rngX) = LibUtils.rngRange(rng, 1, MAX_WIDTH - 1);
             (rng, rngY) = LibUtils.rngRange(rng, 1, MAX_HEIGHT - 1);
+            bool rect1 = rngX > 3 && rngX < MAX_WIDTH - 4;
+            bool rect2 = rngY > 3 && rngY < MAX_HEIGHT - 4;
+            if (!rect1 && !rect2) continue;
 
             TileType tile = getTile(tileMap, LibTile.coordToIndex(uint32(rngX), uint32(rngY)));
             if (tile != TileType.Grass) continue;
