@@ -5,6 +5,7 @@ import { Animations, Direction, Sprites } from "./types";
 export const ZERO_ENTITY = "0x0000000000000000000000000000000000000000000000000000000000000000" as Entity;
 
 export const ANIMATION_INTERVAL = 80;
+export const TILE_ANIMATION_INTERVAL = 80;
 export const TILE_HEIGHT = 16;
 export const TILE_WIDTH = 16;
 export const MAX_WIDTH = 15;

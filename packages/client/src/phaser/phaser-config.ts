@@ -9,7 +9,7 @@ import {
 import worldTileset from "@/../public/assets/tilesets/world.png";
 import { TileAnimations, Tileset } from "@/artTypes/world";
 import {
-  ANIMATION_INTERVAL,
+  TILE_ANIMATION_INTERVAL,
   TILE_HEIGHT,
   TILE_WIDTH,
   DEFAULT_SCALE,
@@ -25,7 +25,7 @@ const mainMap = defineMapConfig({
   tileWidth: TILE_WIDTH,
   tileHeight: TILE_HEIGHT,
   backgroundTile: [Tileset.Void],
-  animationInterval: ANIMATION_INTERVAL,
+  animationInterval: TILE_ANIMATION_INTERVAL,
   tileAnimations: TileAnimations,
   layers: {
     layers: {

@@ -7,7 +7,7 @@ import {
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../create-phaser-layer";
 import { Sprites, Direction } from "@/types";
-import { PlayerAnimationsLookup } from "@/constants";
+import { ANIMATION_INTERVAL, PlayerAnimationsLookup } from "@/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/phaserx";
 import { drawPlayer } from "@/lib/game/drawing";
@@ -105,7 +105,7 @@ export function createPlayerSystem(layer: PhaserLayer) {
                 x: { start: prevCoord.x, to: coord.x },
                 y: { start: prevCoord.y, to: coord.y },
                 ease: "Linear",
-                duration: 50,
+                duration: ANIMATION_INTERVAL,
                 repeat: 0,
               });
               return;
