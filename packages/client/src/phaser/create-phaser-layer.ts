@@ -24,8 +24,6 @@ export const createPhaserLayer = async (
     network,
   };
 
-  console.log({layer})
-
   registerSystems(layer);
 
   return layer;

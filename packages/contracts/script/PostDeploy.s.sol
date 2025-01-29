@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import {Script} from "forge-std/Script.sol";
 import {console} from "forge-std/console.sol";
 import {Position, Map} from "../src/codegen/index.sol";
-import {TileType, GameMode, TeamMode} from "../src/codegen/common.sol";
+import {TileType} from "../src/codegen/common.sol";
 import {LibUtils, LibTilemap} from "../src/libraries/Libraries.sol";
 import {StoreSwitch} from "@latticexyz/store/src/StoreSwitch.sol";
 import {IWorld} from "../src/codegen/world/IWorld.sol";
@@ -72,25 +72,11 @@ contract PostDeploy is Script {
         // ---------------------------------------------------------
         Map.set(mapKey, spawnIndexes, terrain);
 
-        IWorld(worldAddress).pepemate__createSession(
-            keccak256(hex"01"), GameMode.Trainning, TeamMode.AllInOne, mapKey
-        );
-
-        IWorld(worldAddress).pepemate__createSession(
-            keccak256(hex"02"), GameMode.Trainning, TeamMode.AllInOne, mapKey
-        );
-
-        IWorld(worldAddress).pepemate__createSession(
-            keccak256(hex"03"), GameMode.Trainning, TeamMode.AllInOne, mapKey
-        );
-
-        IWorld(worldAddress).pepemate__createSession(
-            keccak256(hex"04"), GameMode.Trainning, TeamMode.AllInOne, mapKey
-        );
-
-        IWorld(worldAddress).pepemate__createSession(
-            keccak256(hex"05"), GameMode.Trainning, TeamMode.AllInOne, mapKey
-        );
+        IWorld(worldAddress).pepemate__createSession(1, mapKey);
+        IWorld(worldAddress).pepemate__createSession(2, mapKey);
+        IWorld(worldAddress).pepemate__createSession(3, mapKey);
+        IWorld(worldAddress).pepemate__createSession(4, mapKey);
+        IWorld(worldAddress).pepemate__createSession(5, mapKey);
 
         // ---------------------------------------------------------
         vm.stopBroadcast();

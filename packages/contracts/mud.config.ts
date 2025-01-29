@@ -10,8 +10,6 @@ export default defineWorld({
   },
   enums: {
     SessionStatus: ["InLobby", "Playing"],
-    GameMode: ["Trainning", "Arena", "Hardcore"],
-    TeamMode: ["AllInOne", "TeamFight"],
     TileType: [
       "None",
       "Grass",
@@ -29,6 +27,14 @@ export default defineWorld({
     Direction: ["Up", "Left", "Right", "Down"],
   },
   tables: {
+    /// GENERAL COMPONENTS
+    Tick: {
+      key: ["id"],
+      schema: { id: "Entity", lastBlock: "uint32", count: "uint32" },
+      codegen: { dataStruct: false },
+    },
+
+    /// TILEMAP COMPONENTS
     Map: {
       key: ["id"],
       schema: {
@@ -41,71 +47,104 @@ export default defineWorld({
       },
     },
 
-    Session: {
+    /// SESSION COMPONENTS
+    SessionState: {
       key: ["id"],
       schema: {
-        id: "bytes32",
+        id: "Entity",
+        // mapId: "Entity",
         status: "SessionStatus",
-        gameMode: "GameMode",
-        teamMode: "TeamMode",
         playerBitmap: "uint8",
         spawnIndexes: "uint32[4]",
         map: "bytes",
       },
     },
 
-    SessionOf: "bytes32",
-    PlayerIndex: "uint8",
+    TileLookup: {
+      key: ["session", "tileIndex", "entityType"],
+      schema: {
+        session: "Entity",
+        tileIndex: "uint32",
+        entityType: "EntityType",
+        entity: "Entity",
+      },
+      codegen: {
+        dataStruct: false,
+      },
+    },
+
+    Session: {
+      key: ["id"],
+      schema: { id: "Entity", session: "Entity" },
+      codegen: { dataStruct: false },
+    },
+
+    PlayerIndex: {
+      key: ["id"],
+      schema: { id: "Entity", playerIndex: "uint8" },
+      codegen: { dataStruct: false },
+    },
+
+    /// BOMB COMPONENTS
+    BombIndex: {
+      key: ["id"],
+      schema: { id: "Entity", index: "uint32" },
+      codegen: { dataStruct: false },
+    },
+
+    BombOwner: {
+      key: ["id"],
+      schema: { id: "Entity", player: "Entity" },
+      codegen: { dataStruct: false },
+    },
+
+    BombRange: {
+      key: ["id"],
+      schema: { id: "Entity", value: "uint32" },
+      codegen: { dataStruct: false },
+    },
+
+    /// PLAYER COMPONENTS
+    Player: {
+      key: ["id"],
+      schema: { id: "Entity", isPlayer: "bool" },
+      codegen: { dataStruct: false },
+    },
 
     Position: {
       key: ["id"],
-      schema: {
-        id: "bytes32",
-        x: "uint32",
-        y: "uint32",
-      },
-      codegen: {
-        dataStruct: false,
-      },
+      schema: { id: "Entity", x: "uint32", y: "uint32" },
+      codegen: { dataStruct: false },
     },
 
-    LastBombPlaced: {
+    LastBombIndex: {
       key: ["id"],
-      schema: {
-        id: "bytes32",
-        tileX: "uint32",
-        tileY: "uint32",
-      },
-      codegen: {
-        dataStruct: false,
-      },
+      schema: { id: "Entity", tileIndex: "uint32" },
+      codegen: { dataStruct: false },
     },
 
-    TileLookup: {
-      key: ["session", "tileX", "tileY", "entityType"],
-      schema: {
-        session: "bytes32",
-        tileX: "uint32",
-        tileY: "uint32",
-        entityType: "EntityType",
-        id: "bytes32",
-      },
-      codegen: {
-        dataStruct: false,
-      },
+    Health: {
+      key: ["id"],
+      schema: { id: "Entity", count: "uint32" },
+      codegen: { dataStruct: false },
     },
 
-    Bomb: "bool",
-    DetonateAt: "uint32",
-    BombRange: "uint32",
-    PlacedBy: "bytes32",
+    FireCount: {
+      key: ["id"],
+      schema: { id: "Entity", value: "uint32" },
+      codegen: { dataStruct: false },
+    },
 
-    Player: "bool",
-    FireCount: "uint32",
-    BombCount: "uint32",
-    BombUsed: "uint32",
+    BombCount: {
+      key: ["id"],
+      schema: { id: "Entity", value: "uint32" },
+      codegen: { dataStruct: false },
+    },
 
-    LastBlock: "uint32",
-    TickCount: "uint32",
+    BombUsed: {
+      key: ["id"],
+      schema: { id: "Entity", value: "uint32" },
+      codegen: { dataStruct: false },
+    },
   },
 });

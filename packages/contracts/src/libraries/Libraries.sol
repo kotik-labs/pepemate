@@ -3,6 +3,7 @@ pragma solidity >=0.8.24;
 
 import {LibUtils} from "./LibUtils.sol";
 import {LibBitmap} from "./LibBitmap.sol";
+import {LibTile} from "./LibTile.sol";
 import {LibTilemap} from "./LibTilemap.sol";
 import {LibPlayer} from "./LibPlayer.sol";
 import {LibBomb} from "./LibBomb.sol";

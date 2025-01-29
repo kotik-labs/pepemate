@@ -16,9 +16,12 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-library LastBlock {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "LastBlock", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000004c617374426c6f636b00000000000000);
+// Import user types
+import { Entity } from "../../Entity.sol";
+
+library Health {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "Health", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000004865616c746800000000000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0004010004000000000000000000000000000000000000000000000000000000);
@@ -43,7 +46,7 @@ library LastBlock {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](1);
-    fieldNames[0] = "value";
+    fieldNames[0] = "count";
   }
 
   /**
@@ -61,95 +64,95 @@ library LastBlock {
   }
 
   /**
-   * @notice Get value.
+   * @notice Get count.
    */
-  function getValue(bytes32 id) internal view returns (uint32 value) {
+  function getCount(Entity id) internal view returns (uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get value.
+   * @notice Get count.
    */
-  function _getValue(bytes32 id) internal view returns (uint32 value) {
+  function _getCount(Entity id) internal view returns (uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get value.
+   * @notice Get count.
    */
-  function get(bytes32 id) internal view returns (uint32 value) {
+  function get(Entity id) internal view returns (uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get value.
+   * @notice Get count.
    */
-  function _get(bytes32 id) internal view returns (uint32 value) {
+  function _get(Entity id) internal view returns (uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Set value.
+   * @notice Set count.
    */
-  function setValue(bytes32 id, uint32 value) internal {
+  function setCount(Entity id, uint32 count) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((count)), _fieldLayout);
   }
 
   /**
-   * @notice Set value.
+   * @notice Set count.
    */
-  function _setValue(bytes32 id, uint32 value) internal {
+  function _setCount(Entity id, uint32 count) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((count)), _fieldLayout);
   }
 
   /**
-   * @notice Set value.
+   * @notice Set count.
    */
-  function set(bytes32 id, uint32 value) internal {
+  function set(Entity id, uint32 count) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((count)), _fieldLayout);
   }
 
   /**
-   * @notice Set value.
+   * @notice Set count.
    */
-  function _set(bytes32 id, uint32 value) internal {
+  function _set(Entity id, uint32 count) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((count)), _fieldLayout);
   }
 
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 id) internal {
+  function deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -157,9 +160,9 @@ library LastBlock {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 id) internal {
+  function _deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -168,8 +171,8 @@ library LastBlock {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint32 value) internal pure returns (bytes memory) {
-    return abi.encodePacked(value);
+  function encodeStatic(uint32 count) internal pure returns (bytes memory) {
+    return abi.encodePacked(count);
   }
 
   /**
@@ -178,8 +181,8 @@ library LastBlock {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint32 value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(value);
+  function encode(uint32 count) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(count);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -190,9 +193,9 @@ library LastBlock {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(Entity id) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     return _keyTuple;
   }

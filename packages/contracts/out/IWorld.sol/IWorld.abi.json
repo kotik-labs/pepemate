@@ -610,26 +610,22 @@
     "inputs": [
       {
         "name": "id",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "name": "gameMode",
-        "type": "uint8",
-        "internalType": "enum GameMode"
-      },
-      {
-        "name": "teamMode",
-        "type": "uint8",
-        "internalType": "enum TeamMode"
-      },
-      {
-        "name": "map",
+        "name": "mapId",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "session",
+        "type": "bytes32",
+        "internalType": "Entity"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
@@ -639,7 +635,7 @@
       {
         "name": "session",
         "type": "bytes32",
-        "internalType": "bytes32"
+        "internalType": "Entity"
       },
       {
         "name": "playerIndex",
@@ -692,23 +688,7 @@
     "type": "function",
     "name": "pepemate__placeBomb",
     "inputs": [],
-    "outputs": [
-      {
-        "name": "session",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "tileX",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "tileY",
-        "type": "uint32",
-        "internalType": "uint32"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -725,7 +705,7 @@
       {
         "name": "session",
         "type": "bytes32",
-        "internalType": "bytes32"
+        "internalType": "Entity"
       },
       {
         "name": "tileX",

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
+import {LibTile} from "./LibTile.sol";
 import {LibTilemap} from "./LibTilemap.sol";
 import {TileType} from "../codegen/common.sol";
 import {MAX_WIDTH, MAX_HEIGHT} from "../constants.sol";
@@ -71,7 +72,7 @@ library LibUtils {
         for (uint32 y = 0; y < MAX_HEIGHT; y++) {
             for (uint32 x = 0; x < MAX_WIDTH; x++) {
                 TileType tile = data[y][x];
-                uint32 index = LibTilemap.coordToIndex(x, y);
+                uint32 index = LibTile.coordToIndex(x, y);
                 if (tile == TileType.SpawnA) {
                     spawnIndexes[0] = index;
                 }

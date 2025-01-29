@@ -16,9 +16,12 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-library LastBombPlaced {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "LastBombPlaced", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000004c617374426f6d62506c616365640000);
+// Import user types
+import { Entity } from "../../Entity.sol";
+
+library Tick {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "Tick", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000005469636b000000000000000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0008020004040000000000000000000000000000000000000000000000000000);
@@ -43,8 +46,8 @@ library LastBombPlaced {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](2);
-    fieldNames[0] = "tileX";
-    fieldNames[1] = "tileY";
+    fieldNames[0] = "lastBlock";
+    fieldNames[1] = "count";
   }
 
   /**
@@ -62,95 +65,95 @@ library LastBombPlaced {
   }
 
   /**
-   * @notice Get tileX.
+   * @notice Get lastBlock.
    */
-  function getTileX(bytes32 id) internal view returns (uint32 tileX) {
+  function getLastBlock(Entity id) internal view returns (uint32 lastBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get tileX.
+   * @notice Get lastBlock.
    */
-  function _getTileX(bytes32 id) internal view returns (uint32 tileX) {
+  function _getLastBlock(Entity id) internal view returns (uint32 lastBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Set tileX.
+   * @notice Set lastBlock.
    */
-  function setTileX(bytes32 id, uint32 tileX) internal {
+  function setLastBlock(Entity id, uint32 lastBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((tileX)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((lastBlock)), _fieldLayout);
   }
 
   /**
-   * @notice Set tileX.
+   * @notice Set lastBlock.
    */
-  function _setTileX(bytes32 id, uint32 tileX) internal {
+  function _setLastBlock(Entity id, uint32 lastBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((tileX)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((lastBlock)), _fieldLayout);
   }
 
   /**
-   * @notice Get tileY.
+   * @notice Get count.
    */
-  function getTileY(bytes32 id) internal view returns (uint32 tileY) {
+  function getCount(Entity id) internal view returns (uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get tileY.
+   * @notice Get count.
    */
-  function _getTileY(bytes32 id) internal view returns (uint32 tileY) {
+  function _getCount(Entity id) internal view returns (uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Set tileY.
+   * @notice Set count.
    */
-  function setTileY(bytes32 id, uint32 tileY) internal {
+  function setCount(Entity id, uint32 count) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((tileY)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((count)), _fieldLayout);
   }
 
   /**
-   * @notice Set tileY.
+   * @notice Set count.
    */
-  function _setTileY(bytes32 id, uint32 tileY) internal {
+  function _setCount(Entity id, uint32 count) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((tileY)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((count)), _fieldLayout);
   }
 
   /**
    * @notice Get the full data.
    */
-  function get(bytes32 id) internal view returns (uint32 tileX, uint32 tileY) {
+  function get(Entity id) internal view returns (uint32 lastBlock, uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
@@ -163,9 +166,9 @@ library LastBombPlaced {
   /**
    * @notice Get the full data.
    */
-  function _get(bytes32 id) internal view returns (uint32 tileX, uint32 tileY) {
+  function _get(Entity id) internal view returns (uint32 lastBlock, uint32 count) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
@@ -178,14 +181,14 @@ library LastBombPlaced {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 id, uint32 tileX, uint32 tileY) internal {
-    bytes memory _staticData = encodeStatic(tileX, tileY);
+  function set(Entity id, uint32 lastBlock, uint32 count) internal {
+    bytes memory _staticData = encodeStatic(lastBlock, count);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -193,14 +196,14 @@ library LastBombPlaced {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 id, uint32 tileX, uint32 tileY) internal {
-    bytes memory _staticData = encodeStatic(tileX, tileY);
+  function _set(Entity id, uint32 lastBlock, uint32 count) internal {
+    bytes memory _staticData = encodeStatic(lastBlock, count);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -208,10 +211,10 @@ library LastBombPlaced {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint32 tileX, uint32 tileY) {
-    tileX = (uint32(Bytes.getBytes4(_blob, 0)));
+  function decodeStatic(bytes memory _blob) internal pure returns (uint32 lastBlock, uint32 count) {
+    lastBlock = (uint32(Bytes.getBytes4(_blob, 0)));
 
-    tileY = (uint32(Bytes.getBytes4(_blob, 4)));
+    count = (uint32(Bytes.getBytes4(_blob, 4)));
   }
 
   /**
@@ -224,16 +227,16 @@ library LastBombPlaced {
     bytes memory _staticData,
     EncodedLengths,
     bytes memory
-  ) internal pure returns (uint32 tileX, uint32 tileY) {
-    (tileX, tileY) = decodeStatic(_staticData);
+  ) internal pure returns (uint32 lastBlock, uint32 count) {
+    (lastBlock, count) = decodeStatic(_staticData);
   }
 
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 id) internal {
+  function deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -241,9 +244,9 @@ library LastBombPlaced {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 id) internal {
+  function _deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -252,8 +255,8 @@ library LastBombPlaced {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint32 tileX, uint32 tileY) internal pure returns (bytes memory) {
-    return abi.encodePacked(tileX, tileY);
+  function encodeStatic(uint32 lastBlock, uint32 count) internal pure returns (bytes memory) {
+    return abi.encodePacked(lastBlock, count);
   }
 
   /**
@@ -262,8 +265,8 @@ library LastBombPlaced {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint32 tileX, uint32 tileY) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(tileX, tileY);
+  function encode(uint32 lastBlock, uint32 count) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(lastBlock, count);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -274,9 +277,9 @@ library LastBombPlaced {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(Entity id) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     return _keyTuple;
   }

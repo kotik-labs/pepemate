@@ -16,6 +16,9 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
+// Import user types
+import { Entity } from "../../Entity.sol";
+
 library Position {
   // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "Position", typeId: RESOURCE_TABLE });`
   ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d617465000000000000506f736974696f6e0000000000000000);
@@ -64,9 +67,9 @@ library Position {
   /**
    * @notice Get x.
    */
-  function getX(bytes32 id) internal view returns (uint32 x) {
+  function getX(Entity id) internal view returns (uint32 x) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -75,9 +78,9 @@ library Position {
   /**
    * @notice Get x.
    */
-  function _getX(bytes32 id) internal view returns (uint32 x) {
+  function _getX(Entity id) internal view returns (uint32 x) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -86,9 +89,9 @@ library Position {
   /**
    * @notice Set x.
    */
-  function setX(bytes32 id, uint32 x) internal {
+  function setX(Entity id, uint32 x) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((x)), _fieldLayout);
   }
@@ -96,9 +99,9 @@ library Position {
   /**
    * @notice Set x.
    */
-  function _setX(bytes32 id, uint32 x) internal {
+  function _setX(Entity id, uint32 x) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((x)), _fieldLayout);
   }
@@ -106,9 +109,9 @@ library Position {
   /**
    * @notice Get y.
    */
-  function getY(bytes32 id) internal view returns (uint32 y) {
+  function getY(Entity id) internal view returns (uint32 y) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -117,9 +120,9 @@ library Position {
   /**
    * @notice Get y.
    */
-  function _getY(bytes32 id) internal view returns (uint32 y) {
+  function _getY(Entity id) internal view returns (uint32 y) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -128,9 +131,9 @@ library Position {
   /**
    * @notice Set y.
    */
-  function setY(bytes32 id, uint32 y) internal {
+  function setY(Entity id, uint32 y) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((y)), _fieldLayout);
   }
@@ -138,9 +141,9 @@ library Position {
   /**
    * @notice Set y.
    */
-  function _setY(bytes32 id, uint32 y) internal {
+  function _setY(Entity id, uint32 y) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((y)), _fieldLayout);
   }
@@ -148,9 +151,9 @@ library Position {
   /**
    * @notice Get the full data.
    */
-  function get(bytes32 id) internal view returns (uint32 x, uint32 y) {
+  function get(Entity id) internal view returns (uint32 x, uint32 y) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
@@ -163,9 +166,9 @@ library Position {
   /**
    * @notice Get the full data.
    */
-  function _get(bytes32 id) internal view returns (uint32 x, uint32 y) {
+  function _get(Entity id) internal view returns (uint32 x, uint32 y) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
@@ -178,14 +181,14 @@ library Position {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 id, uint32 x, uint32 y) internal {
+  function set(Entity id, uint32 x, uint32 y) internal {
     bytes memory _staticData = encodeStatic(x, y);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -193,14 +196,14 @@ library Position {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 id, uint32 x, uint32 y) internal {
+  function _set(Entity id, uint32 x, uint32 y) internal {
     bytes memory _staticData = encodeStatic(x, y);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -227,9 +230,9 @@ library Position {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 id) internal {
+  function deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -237,9 +240,9 @@ library Position {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 id) internal {
+  function _deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -270,9 +273,9 @@ library Position {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(Entity id) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     return _keyTuple;
   }

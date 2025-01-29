@@ -2,7 +2,6 @@ import {
   defineSystem,
   getComponentValue,
   Has,
-  HasValue,
   UpdateType,
   Entity,
 } from "@latticexyz/recs";
@@ -13,6 +12,7 @@ import { drawAnimation } from "@/lib/game/drawing";
 import { getExplosionAnimations } from "@/lib/game/bomb";
 import { Hex, toBytes } from "viem";
 import { uuid } from "@latticexyz/utils";
+import { MAX_WIDTH } from "@/constants";
 
 export function createBombSystem(layer: PhaserLayer) {
   const {
@@ -27,64 +27,44 @@ export function createBombSystem(layer: PhaserLayer) {
     network: {
       world,
       systemCalls: { triggerBomb },
-      components: {
-        Session,
-        SessionOf,
-        LocalSession,
-        Bomb,
-        Position,
-        BombRange,
-      },
+      components: { SessionState, Session, LocalSession, BombIndex, BombRange },
     },
   } = layer;
 
   defineSystem(
     world,
-    [HasValue(Bomb, { value: true }), Has(Position), Has(SessionOf)],
-    ({ entity, value, type }) => {
+    [Has(BombIndex), Has(Session)],
+    ({ entity, value, type, component }) => {
       const localSession = getComponentValue(LocalSession, singletonEntity);
       if (!localSession) return;
 
-      const session = getComponentValue(SessionOf, entity);
-      if (!session || session.value !== localSession.id) return;
+      const session = getComponentValue(Session, entity);
+      if (!session || session.session !== localSession.id) return;
 
-      const sessionData = getComponentValue(Session, session.value as Entity);
+      const sessionData = getComponentValue(
+        SessionState,
+        session.session as Entity
+      );
       if (!sessionData) return;
 
       const tileMap = toBytes(sessionData.map);
 
-      if (type === UpdateType.Update || type === UpdateType.Enter) {
-        console.log("BOMB PLACED", { entity, value, type });
-        const position = getComponentValue(Position, entity);
-        if (!position || (position.x === 0 && position.y === 0)) return;
-
-        putAnimationAt(
-          // pixelCoordToTileCoord(position, TILE_WIDTH, TILE_HEIGHT),
-          position,
-          TileAnimationKey.Bomb,
-          "Foreground"
-        );
-
-        setTimeout(() => {
-          triggerBomb(session.value as Hex, position.x, position.y);
-          triggerBomb(session.value as Hex, position.x, position.y);
-          triggerBomb(session.value as Hex, position.x, position.y);
-        }, 3000);
-      }
-
-      if (type === UpdateType.Exit) {
+      if (type === UpdateType.Update && component.id == BombIndex.id) {
         console.log("BOMB DETONATED", { entity, value, type });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const bombIndex = value[1] as any;
         const power = getComponentValue(BombRange, entity);
-        const position = getComponentValue(Position, entity);
-        if (!position || !power) return;
+        if (!power) return;
 
         // const bombTile = pixelCoordToTileCoord(
         //   position,
         //   TILE_WIDTH,
         //   TILE_HEIGHT
         // );
-
-        const bombTile = position;
+        const bombTile = {
+          x: bombIndex.index % MAX_WIDTH,
+          y: Math.floor(bombIndex.index / MAX_WIDTH),
+        };
 
         removeAnimationAt(bombTile, "Foreground");
         putTileAt(bombTile, Tileset.Void, "Foreground");
@@ -97,6 +77,26 @@ export function createBombSystem(layer: PhaserLayer) {
         )) {
           drawAnimation(objectPool, uuid(), animation, tileCoord);
         }
+      }
+
+      if (type === UpdateType.Update || type === UpdateType.Enter) {
+        const bombIndex = getComponentValue(BombIndex, entity);
+        if (!bombIndex || bombIndex.index == 0) return;
+
+        console.log("BOMB PLACED", { entity, value, type, component });
+
+        const tileCoord = {
+          x: bombIndex.index % MAX_WIDTH,
+          y: Math.floor(bombIndex.index / MAX_WIDTH),
+        };
+
+        putAnimationAt(tileCoord, TileAnimationKey.Bomb, "Foreground");
+
+        setTimeout(() => {
+          triggerBomb(session.session as Hex, tileCoord.x, tileCoord.y);
+          triggerBomb(session.session as Hex, tileCoord.x, tileCoord.y);
+          triggerBomb(session.session as Hex, tileCoord.x, tileCoord.y);
+        }, 3000);
       }
     }
   );

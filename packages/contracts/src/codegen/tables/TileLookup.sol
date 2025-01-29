@@ -17,6 +17,7 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
+import { Entity } from "../../Entity.sol";
 import { EntityType } from "../common.sol";
 
 library TileLookup {
@@ -26,8 +27,8 @@ library TileLookup {
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
 
-  // Hex-encoded key schema of (bytes32, uint32, uint32, uint8)
-  Schema constant _keySchema = Schema.wrap(0x002904005f030300000000000000000000000000000000000000000000000000);
+  // Hex-encoded key schema of (bytes32, uint32, uint8)
+  Schema constant _keySchema = Schema.wrap(0x002503005f030000000000000000000000000000000000000000000000000000);
   // Hex-encoded value schema of (bytes32)
   Schema constant _valueSchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
 
@@ -36,11 +37,10 @@ library TileLookup {
    * @return keyNames An array of strings with the names of key fields.
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
-    keyNames = new string[](4);
+    keyNames = new string[](3);
     keyNames[0] = "session";
-    keyNames[1] = "tileX";
-    keyNames[2] = "tileY";
-    keyNames[3] = "entityType";
+    keyNames[1] = "tileIndex";
+    keyNames[2] = "entityType";
   }
 
   /**
@@ -49,7 +49,7 @@ library TileLookup {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](1);
-    fieldNames[0] = "id";
+    fieldNames[0] = "entity";
   }
 
   /**
@@ -67,132 +67,113 @@ library TileLookup {
   }
 
   /**
-   * @notice Get id.
+   * @notice Get entity.
    */
-  function getId(
-    bytes32 session,
-    uint32 tileX,
-    uint32 tileY,
-    EntityType entityType
-  ) internal view returns (bytes32 id) {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function getEntity(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (bytes32(_blob));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get id.
+   * @notice Get entity.
    */
-  function _getId(
-    bytes32 session,
-    uint32 tileX,
-    uint32 tileY,
-    EntityType entityType
-  ) internal view returns (bytes32 id) {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function _getEntity(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (bytes32(_blob));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get id.
+   * @notice Get entity.
    */
-  function get(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType) internal view returns (bytes32 id) {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function get(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (bytes32(_blob));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get id.
+   * @notice Get entity.
    */
-  function _get(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType) internal view returns (bytes32 id) {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function _get(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (bytes32(_blob));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Set id.
+   * @notice Set entity.
    */
-  function setId(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType, bytes32 id) internal {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function setEntity(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((id)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(entity)), _fieldLayout);
   }
 
   /**
-   * @notice Set id.
+   * @notice Set entity.
    */
-  function _setId(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType, bytes32 id) internal {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function _setEntity(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((id)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(entity)), _fieldLayout);
   }
 
   /**
-   * @notice Set id.
+   * @notice Set entity.
    */
-  function set(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType, bytes32 id) internal {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function set(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((id)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(entity)), _fieldLayout);
   }
 
   /**
-   * @notice Set id.
+   * @notice Set entity.
    */
-  function _set(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType, bytes32 id) internal {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function _set(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((id)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(entity)), _fieldLayout);
   }
 
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType) internal {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function deleteRecord(Entity session, uint32 tileIndex, EntityType entityType) internal {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -200,12 +181,11 @@ library TileLookup {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 session, uint32 tileX, uint32 tileY, EntityType entityType) internal {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+  function _deleteRecord(Entity session, uint32 tileIndex, EntityType entityType) internal {
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -214,8 +194,8 @@ library TileLookup {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(bytes32 id) internal pure returns (bytes memory) {
-    return abi.encodePacked(id);
+  function encodeStatic(Entity entity) internal pure returns (bytes memory) {
+    return abi.encodePacked(entity);
   }
 
   /**
@@ -224,8 +204,8 @@ library TileLookup {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(bytes32 id) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(id);
+  function encode(Entity entity) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(entity);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -237,16 +217,14 @@ library TileLookup {
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
   function encodeKeyTuple(
-    bytes32 session,
-    uint32 tileX,
-    uint32 tileY,
+    Entity session,
+    uint32 tileIndex,
     EntityType entityType
   ) internal pure returns (bytes32[] memory) {
-    bytes32[] memory _keyTuple = new bytes32[](4);
-    _keyTuple[0] = session;
-    _keyTuple[1] = bytes32(uint256(tileX));
-    _keyTuple[2] = bytes32(uint256(tileY));
-    _keyTuple[3] = bytes32(uint256(uint8(entityType)));
+    bytes32[] memory _keyTuple = new bytes32[](3);
+    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[1] = bytes32(uint256(tileIndex));
+    _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
     return _keyTuple;
   }

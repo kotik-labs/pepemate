@@ -16,11 +16,11 @@ export function createTilemapSystem(layer: PhaserLayer) {
     },
     network: {
       world,
-      components: { Session, LocalSession },
+      components: { SessionState, LocalSession },
     },
   } = layer;
 
-  defineSystem(world, [Has(Session)], ({ entity, value }) => {
+  defineSystem(world, [Has(SessionState)], ({ entity, value }) => {
     const localSession = getComponentValue(LocalSession, singletonEntity);
     const session = value[0];
 

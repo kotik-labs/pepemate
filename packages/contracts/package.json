@@ -6,6 +6,7 @@
   "scripts": {
     "build": "mud build",
     "clean": "forge clean && shx rm -rf src/**/codegen",
+    "codegen": "mud tablegen && mud worldgen",
     "deploy:local": "mud deploy",
     "deploy:rhodolite": "env $(grep -v '#' .env.rhodolite | xargs) mud deploy --profile=rhodolite",
     "dev": "mud dev-contracts",

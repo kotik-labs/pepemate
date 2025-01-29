@@ -36,15 +36,15 @@ export function createPlayerSystem(layer: PhaserLayer) {
     },
     network: {
       world,
-      components: { Player, Position, LocalSession, SessionOf, PlayerIndex },
+      components: { Player, Position, LocalSession, Session, PlayerIndex },
     },
   } = layer;
 
   defineSystem(
     world,
     [
-      HasValue(Player, { value: true }),
-      Has(SessionOf),
+      HasValue(Player, { isPlayer: true }),
+      Has(Session),
       Has(Position),
       Has(PlayerIndex),
     ],
@@ -52,13 +52,13 @@ export function createPlayerSystem(layer: PhaserLayer) {
       const localSession = getComponentValue(LocalSession, singletonEntity);
       if (!localSession) return;
 
-      const session = getComponentValue(SessionOf, entity);
-      if (!session || session.value !== localSession.id) return;
+      const session = getComponentValue(Session, entity);
+      if (!session || session.session !== localSession.id) return;
 
       const playerIndex = getComponentValue(PlayerIndex, entity);
       if (!playerIndex) return;
 
-      const playerSprite = PlayerSprites[playerIndex.value];
+      const playerSprite = PlayerSprites[playerIndex.playerIndex];
       const texture = config.sprites[playerSprite];
       const moveAnimations = PlayerAnimationsLookup[playerSprite];
 

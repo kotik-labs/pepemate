@@ -8,17 +8,6 @@ enum SessionStatus {
   Playing
 }
 
-enum GameMode {
-  Trainning,
-  Arena,
-  Hardcore
-}
-
-enum TeamMode {
-  AllInOne,
-  TeamFight
-}
-
 enum TileType {
   None,
   Grass,

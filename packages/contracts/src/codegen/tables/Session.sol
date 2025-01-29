@@ -17,28 +17,19 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
-import { SessionStatus, GameMode, TeamMode } from "../common.sol";
-
-struct SessionData {
-  SessionStatus status;
-  GameMode gameMode;
-  TeamMode teamMode;
-  uint8 playerBitmap;
-  uint32[4] spawnIndexes;
-  bytes map;
-}
+import { Entity } from "../../Entity.sol";
 
 library Session {
   // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "Session", typeId: RESOURCE_TABLE });`
   ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d61746500000000000053657373696f6e000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0004040201010101000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint8, uint8, uint8, uint8, uint32[], bytes)
-  Schema constant _valueSchema = Schema.wrap(0x000404020000000065c400000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (bytes32)
+  Schema constant _valueSchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -54,13 +45,8 @@ library Session {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](6);
-    fieldNames[0] = "status";
-    fieldNames[1] = "gameMode";
-    fieldNames[2] = "teamMode";
-    fieldNames[3] = "playerBitmap";
-    fieldNames[4] = "spawnIndexes";
-    fieldNames[5] = "map";
+    fieldNames = new string[](1);
+    fieldNames[0] = "session";
   }
 
   /**
@@ -78,614 +64,95 @@ library Session {
   }
 
   /**
-   * @notice Get status.
+   * @notice Get session.
    */
-  function getStatus(bytes32 id) internal view returns (SessionStatus status) {
+  function getSession(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return SessionStatus(uint8(bytes1(_blob)));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get status.
+   * @notice Get session.
    */
-  function _getStatus(bytes32 id) internal view returns (SessionStatus status) {
+  function _getSession(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return SessionStatus(uint8(bytes1(_blob)));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Set status.
+   * @notice Get session.
    */
-  function setStatus(bytes32 id, SessionStatus status) internal {
+  function get(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(status)), _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Set status.
+   * @notice Get session.
    */
-  function _setStatus(bytes32 id, SessionStatus status) internal {
+  function _get(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(status)), _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get gameMode.
+   * @notice Set session.
    */
-  function getGameMode(bytes32 id) internal view returns (GameMode gameMode) {
+  function setSession(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return GameMode(uint8(bytes1(_blob)));
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
-   * @notice Get gameMode.
+   * @notice Set session.
    */
-  function _getGameMode(bytes32 id) internal view returns (GameMode gameMode) {
+  function _setSession(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return GameMode(uint8(bytes1(_blob)));
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
-   * @notice Set gameMode.
+   * @notice Set session.
    */
-  function setGameMode(bytes32 id, GameMode gameMode) internal {
+  function set(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked(uint8(gameMode)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
-   * @notice Set gameMode.
+   * @notice Set session.
    */
-  function _setGameMode(bytes32 id, GameMode gameMode) internal {
+  function _set(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked(uint8(gameMode)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get teamMode.
-   */
-  function getTeamMode(bytes32 id) internal view returns (TeamMode teamMode) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return TeamMode(uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Get teamMode.
-   */
-  function _getTeamMode(bytes32 id) internal view returns (TeamMode teamMode) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return TeamMode(uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Set teamMode.
-   */
-  function setTeamMode(bytes32 id, TeamMode teamMode) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(uint8(teamMode)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set teamMode.
-   */
-  function _setTeamMode(bytes32 id, TeamMode teamMode) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(uint8(teamMode)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get playerBitmap.
-   */
-  function getPlayerBitmap(bytes32 id) internal view returns (uint8 playerBitmap) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Get playerBitmap.
-   */
-  function _getPlayerBitmap(bytes32 id) internal view returns (uint8 playerBitmap) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Set playerBitmap.
-   */
-  function setPlayerBitmap(bytes32 id, uint8 playerBitmap) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((playerBitmap)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set playerBitmap.
-   */
-  function _setPlayerBitmap(bytes32 id, uint8 playerBitmap) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((playerBitmap)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get spawnIndexes.
-   */
-  function getSpawnIndexes(bytes32 id) internal view returns (uint32[4] memory spawnIndexes) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return toStaticArray_uint32_4(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
-  }
-
-  /**
-   * @notice Get spawnIndexes.
-   */
-  function _getSpawnIndexes(bytes32 id) internal view returns (uint32[4] memory spawnIndexes) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return toStaticArray_uint32_4(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
-  }
-
-  /**
-   * @notice Set spawnIndexes.
-   */
-  function setSpawnIndexes(bytes32 id, uint32[4] memory spawnIndexes) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)));
-  }
-
-  /**
-   * @notice Set spawnIndexes.
-   */
-  function _setSpawnIndexes(bytes32 id, uint32[4] memory spawnIndexes) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)));
-  }
-
-  // The length of spawnIndexes
-  uint256 constant lengthSpawnIndexes = 4;
-
-  /**
-   * @notice Get an item of spawnIndexes.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-  function getItemSpawnIndexes(bytes32 id, uint256 _index) internal view returns (uint32) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    uint256 dynamicLength = _byteLength / 4;
-    uint256 staticLength = 4;
-
-    if (_index < staticLength && _index >= dynamicLength) {
-      return (uint32(bytes4(new bytes(0))));
-    }
-
-    unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
-      return (uint32(bytes4(_blob)));
-    }
-  }
-
-  /**
-   * @notice Get an item of spawnIndexes.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-  function _getItemSpawnIndexes(bytes32 id, uint256 _index) internal view returns (uint32) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    uint256 dynamicLength = _byteLength / 4;
-    uint256 staticLength = 4;
-
-    if (_index < staticLength && _index >= dynamicLength) {
-      return (uint32(bytes4(new bytes(0))));
-    }
-
-    unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
-      return (uint32(bytes4(_blob)));
-    }
-  }
-
-  /**
-   * @notice Update an element of spawnIndexes at `_index`.
-   */
-  function updateSpawnIndexes(bytes32 id, uint256 _index, uint32 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    unchecked {
-      bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
-    }
-  }
-
-  /**
-   * @notice Update an element of spawnIndexes at `_index`.
-   */
-  function _updateSpawnIndexes(bytes32 id, uint256 _index, uint32 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    unchecked {
-      bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
-    }
-  }
-
-  /**
-   * @notice Get map.
-   */
-  function getMap(bytes32 id) internal view returns (bytes memory map) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
-    return (bytes(_blob));
-  }
-
-  /**
-   * @notice Get map.
-   */
-  function _getMap(bytes32 id) internal view returns (bytes memory map) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
-    return (bytes(_blob));
-  }
-
-  /**
-   * @notice Set map.
-   */
-  function setMap(bytes32 id, bytes memory map) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((map)));
-  }
-
-  /**
-   * @notice Set map.
-   */
-  function _setMap(bytes32 id, bytes memory map) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((map)));
-  }
-
-  /**
-   * @notice Get the length of map.
-   */
-  function lengthMap(bytes32 id) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
-    unchecked {
-      return _byteLength / 1;
-    }
-  }
-
-  /**
-   * @notice Get the length of map.
-   */
-  function _lengthMap(bytes32 id) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
-    unchecked {
-      return _byteLength / 1;
-    }
-  }
-
-  /**
-   * @notice Get an item of map.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-  function getItemMap(bytes32 id, uint256 _index) internal view returns (bytes memory) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
-      return (bytes(_blob));
-    }
-  }
-
-  /**
-   * @notice Get an item of map.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-  function _getItemMap(bytes32 id, uint256 _index) internal view returns (bytes memory) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
-      return (bytes(_blob));
-    }
-  }
-
-  /**
-   * @notice Push a slice to map.
-   */
-  function pushMap(bytes32 id, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
-  }
-
-  /**
-   * @notice Push a slice to map.
-   */
-  function _pushMap(bytes32 id, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
-  }
-
-  /**
-   * @notice Pop a slice from map.
-   */
-  function popMap(bytes32 id) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
-  }
-
-  /**
-   * @notice Pop a slice from map.
-   */
-  function _popMap(bytes32 id) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
-  }
-
-  /**
-   * @notice Update a slice of map at `_index`.
-   */
-  function updateMap(bytes32 id, uint256 _index, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    unchecked {
-      bytes memory _encoded = bytes((_slice));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
-    }
-  }
-
-  /**
-   * @notice Update a slice of map at `_index`.
-   */
-  function _updateMap(bytes32 id, uint256 _index, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    unchecked {
-      bytes memory _encoded = bytes((_slice));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
-    }
-  }
-
-  /**
-   * @notice Get the full data.
-   */
-  function get(bytes32 id) internal view returns (SessionData memory _table) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
-      _tableId,
-      _keyTuple,
-      _fieldLayout
-    );
-    return decode(_staticData, _encodedLengths, _dynamicData);
-  }
-
-  /**
-   * @notice Get the full data.
-   */
-  function _get(bytes32 id) internal view returns (SessionData memory _table) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
-      _tableId,
-      _keyTuple,
-      _fieldLayout
-    );
-    return decode(_staticData, _encodedLengths, _dynamicData);
-  }
-
-  /**
-   * @notice Set the full data using individual values.
-   */
-  function set(
-    bytes32 id,
-    SessionStatus status,
-    GameMode gameMode,
-    TeamMode teamMode,
-    uint8 playerBitmap,
-    uint32[4] memory spawnIndexes,
-    bytes memory map
-  ) internal {
-    bytes memory _staticData = encodeStatic(status, gameMode, teamMode, playerBitmap);
-
-    EncodedLengths _encodedLengths = encodeLengths(spawnIndexes, map);
-    bytes memory _dynamicData = encodeDynamic(spawnIndexes, map);
-
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
-  }
-
-  /**
-   * @notice Set the full data using individual values.
-   */
-  function _set(
-    bytes32 id,
-    SessionStatus status,
-    GameMode gameMode,
-    TeamMode teamMode,
-    uint8 playerBitmap,
-    uint32[4] memory spawnIndexes,
-    bytes memory map
-  ) internal {
-    bytes memory _staticData = encodeStatic(status, gameMode, teamMode, playerBitmap);
-
-    EncodedLengths _encodedLengths = encodeLengths(spawnIndexes, map);
-    bytes memory _dynamicData = encodeDynamic(spawnIndexes, map);
-
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
-  }
-
-  /**
-   * @notice Set the full data using the data struct.
-   */
-  function set(bytes32 id, SessionData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.status, _table.gameMode, _table.teamMode, _table.playerBitmap);
-
-    EncodedLengths _encodedLengths = encodeLengths(_table.spawnIndexes, _table.map);
-    bytes memory _dynamicData = encodeDynamic(_table.spawnIndexes, _table.map);
-
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
-  }
-
-  /**
-   * @notice Set the full data using the data struct.
-   */
-  function _set(bytes32 id, SessionData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.status, _table.gameMode, _table.teamMode, _table.playerBitmap);
-
-    EncodedLengths _encodedLengths = encodeLengths(_table.spawnIndexes, _table.map);
-    bytes memory _dynamicData = encodeDynamic(_table.spawnIndexes, _table.map);
-
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
-
-    StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
-  }
-
-  /**
-   * @notice Decode the tightly packed blob of static data using this table's field layout.
-   */
-  function decodeStatic(
-    bytes memory _blob
-  ) internal pure returns (SessionStatus status, GameMode gameMode, TeamMode teamMode, uint8 playerBitmap) {
-    status = SessionStatus(uint8(Bytes.getBytes1(_blob, 0)));
-
-    gameMode = GameMode(uint8(Bytes.getBytes1(_blob, 1)));
-
-    teamMode = TeamMode(uint8(Bytes.getBytes1(_blob, 2)));
-
-    playerBitmap = (uint8(Bytes.getBytes1(_blob, 3)));
-  }
-
-  /**
-   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
-   */
-  function decodeDynamic(
-    EncodedLengths _encodedLengths,
-    bytes memory _blob
-  ) internal pure returns (uint32[4] memory spawnIndexes, bytes memory map) {
-    uint256 _start;
-    uint256 _end;
-    unchecked {
-      _end = _encodedLengths.atIndex(0);
-    }
-    spawnIndexes = toStaticArray_uint32_4(SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
-
-    _start = _end;
-    unchecked {
-      _end += _encodedLengths.atIndex(1);
-    }
-    map = (bytes(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
-  }
-
-  /**
-   * @notice Decode the tightly packed blobs using this table's field layout.
-   * @param _staticData Tightly packed static fields.
-   * @param _encodedLengths Encoded lengths of dynamic fields.
-   * @param _dynamicData Tightly packed dynamic fields.
-   */
-  function decode(
-    bytes memory _staticData,
-    EncodedLengths _encodedLengths,
-    bytes memory _dynamicData
-  ) internal pure returns (SessionData memory _table) {
-    (_table.status, _table.gameMode, _table.teamMode, _table.playerBitmap) = decodeStatic(_staticData);
-
-    (_table.spawnIndexes, _table.map) = decodeDynamic(_encodedLengths, _dynamicData);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 id) internal {
+  function deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -693,9 +160,9 @@ library Session {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 id) internal {
+  function _deleteRecord(Entity id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -704,35 +171,8 @@ library Session {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(
-    SessionStatus status,
-    GameMode gameMode,
-    TeamMode teamMode,
-    uint8 playerBitmap
-  ) internal pure returns (bytes memory) {
-    return abi.encodePacked(status, gameMode, teamMode, playerBitmap);
-  }
-
-  /**
-   * @notice Tightly pack dynamic data lengths using this table's schema.
-   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
-   */
-  function encodeLengths(
-    uint32[4] memory spawnIndexes,
-    bytes memory map
-  ) internal pure returns (EncodedLengths _encodedLengths) {
-    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
-    unchecked {
-      _encodedLengths = EncodedLengthsLib.pack(spawnIndexes.length * 4, bytes(map).length);
-    }
-  }
-
-  /**
-   * @notice Tightly pack dynamic (variable length) data using this table's schema.
-   * @return The dynamic data, encoded into a sequence of bytes.
-   */
-  function encodeDynamic(uint32[4] memory spawnIndexes, bytes memory map) internal pure returns (bytes memory) {
-    return abi.encodePacked(EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)), bytes((map)));
+  function encodeStatic(Entity session) internal pure returns (bytes memory) {
+    return abi.encodePacked(session);
   }
 
   /**
@@ -741,18 +181,11 @@ library Session {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(
-    SessionStatus status,
-    GameMode gameMode,
-    TeamMode teamMode,
-    uint8 playerBitmap,
-    uint32[4] memory spawnIndexes,
-    bytes memory map
-  ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(status, gameMode, teamMode, playerBitmap);
+  function encode(Entity session) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(session);
 
-    EncodedLengths _encodedLengths = encodeLengths(spawnIndexes, map);
-    bytes memory _dynamicData = encodeDynamic(spawnIndexes, map);
+    EncodedLengths _encodedLengths;
+    bytes memory _dynamicData;
 
     return (_staticData, _encodedLengths, _dynamicData);
   }
@@ -760,49 +193,10 @@ library Session {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(Entity id) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = id;
+    _keyTuple[0] = Entity.unwrap(id);
 
     return _keyTuple;
   }
-}
-
-/**
- * @notice Cast a dynamic array to a static array.
- * @dev In memory static arrays are just dynamic arrays without the 32 length bytes,
- * so this function moves the pointer to the first element of the dynamic array.
- * If the length of the dynamic array is smaller than the static length,
- * the function returns an uninitialized array to avoid memory corruption.
- * @param _value The dynamic array to cast.
- * @return _result The static array.
- */
-function toStaticArray_uint32_4(uint32[] memory _value) pure returns (uint32[4] memory _result) {
-  if (_value.length < 4) {
-    // return an uninitialized array if the length is smaller than the fixed length to avoid memory corruption
-    return _result;
-  } else {
-    // in memory static arrays are just dynamic arrays without the 32 length bytes
-    // (without the length check this could lead to memory corruption)
-    assembly {
-      _result := add(_value, 0x20)
-    }
-  }
-}
-
-/**
- * @notice Copy a static array to a dynamic array.
- * @dev Static arrays don't have a length prefix, so this function copies the memory from the static array to a new dynamic array.
- * @param _value The static array to copy.
- * @return _result The dynamic array.
- */
-function fromStaticArray_uint32_4(uint32[4] memory _value) pure returns (uint32[] memory _result) {
-  _result = new uint32[](4);
-  uint256 fromPointer;
-  uint256 toPointer;
-  assembly {
-    fromPointer := _value
-    toPointer := add(_result, 0x20)
-  }
-  Memory.copy(fromPointer, toPointer, 128);
 }

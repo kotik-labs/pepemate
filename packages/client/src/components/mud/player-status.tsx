@@ -65,22 +65,15 @@ export const PlayerStatus = ({
 }: PlayerStatusProps) => {
   const {
     playerEntity,
-    components: {
-      PlayerIndex,
-      SessionOf,
-      TickCount,
-      FireCount,
-      BombCount,
-      BombUsed,
-    },
+    components: { PlayerIndex, Session, Tick, FireCount, BombCount, BombUsed },
     systemCalls: { joinSession, leaveSession },
   } = networkLayer;
   const playerImage = playerImages[playerIndex];
 
   const [pEntity] = useEntityQuery([
-    HasValue(PlayerIndex, { value: playerIndex }),
-    HasValue(SessionOf, { value: session }),
-    Has(TickCount),
+    HasValue(PlayerIndex, { playerIndex }),
+    HasValue(Session, { session }),
+    Has(Tick),
   ]);
 
   if (!pEntity) {
@@ -111,7 +104,7 @@ export const PlayerStatus = ({
     );
   }
 
-  const [address] = decodeAbiParameters(parseAbiParameters("address"), pEntity);
+  const [address] = decodeAbiParameters(parseAbiParameters("address"), pEntity as Hex);
 
   const isSelf = pEntity === playerEntity;
   const { value: fireCount } = getComponentValue(FireCount, pEntity) || {
@@ -123,8 +116,8 @@ export const PlayerStatus = ({
   const { value: bombMaxCount } = getComponentValue(BombCount, pEntity) || {
     value: 0,
   };
-  const { value: tickCount } = getComponentValue(TickCount, pEntity) || {
-    value: 0,
+  const { count: tickCount } = getComponentValue(Tick, pEntity) || {
+    count: 0,
   };
 
   const stamina = (tickCount / MAX_TICKS_PER_BLOCK) * 100;

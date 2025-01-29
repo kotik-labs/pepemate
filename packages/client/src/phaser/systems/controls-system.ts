@@ -24,18 +24,19 @@ export function createControlSystem(layer: PhaserLayer) {
     network: {
       world,
       playerEntity,
-      components: { LocalSession, SessionOf },
+      components: { LocalSession, Session },
       systemCalls: { spawn, move, placeBomb, batchMove },
     },
   } = layer;
 
-  defineEnterSystem(world, [Has(SessionOf)], ({ entity }) => {
+  defineEnterSystem(world, [Has(Session)], ({ entity }) => {
     if (entity !== playerEntity) return;
 
-    const session = getComponentValue(SessionOf, entity);
+    const session = getComponentValue(Session, entity);
     const localSession = getComponentValue(LocalSession, singletonEntity);
 
-    if (!session || !localSession || session.value !== localSession.id) return;
+    if (!session || !localSession || session.session !== localSession.id)
+      return;
 
     // input.pointerdown$.subscribe((event) => {
     //   if (!event.pointer.leftButtonDown()) return;
