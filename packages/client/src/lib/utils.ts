@@ -1,3 +1,4 @@
+import { DEFAULT_KEYBINDINGS } from "@/constants";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Hex } from "viem";
@@ -17,4 +18,10 @@ export const shorten = (value: Hex) => {
   );
   if (!match) return value;
   return match[1] + "\u2026" + match[2];
+};
+
+
+export const getBrowserControls = (): typeof DEFAULT_KEYBINDINGS => {
+  const controls = localStorage.getItem("controls");
+  return controls ? JSON.parse(controls) : DEFAULT_KEYBINDINGS;
 };

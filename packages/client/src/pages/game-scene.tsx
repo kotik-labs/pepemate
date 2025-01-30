@@ -10,6 +10,7 @@ import { PlayerStatus } from "@/components/mud/player-status";
 import { PhaserWrapper } from "@/components/mud/phaser-wrapper";
 import { cn } from "@/lib/utils";
 import { NotConnected } from "@/components/mud/not-connected";
+import { ControlsModal } from "@/components/controls-modal";
 
 type Props = {
   worldContract: WorldContract;
@@ -33,10 +34,10 @@ export const GameScene = ({ session, worldContract }: Props) => {
   ));
 
   return (
-    <div className="flex flex-col justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center h-full gap-2">
       <div
         className={cn(
-          "rounded-lg min-w-96 w-max bg-black flex flex-col items-center",
+          "rounded-lg min-w-96 w-max bg-black flex flex-col items-center ring-1 ring-white",
           "gap-3 p-3"
         )}
       >
@@ -44,6 +45,11 @@ export const GameScene = ({ session, worldContract }: Props) => {
           {playerStatuses}
         </div>
         <PhaserWrapper networkLayer={networkLayer} />
+      </div>
+      <div className="w-full text-right">
+        <ControlsModal>
+          <p className="transition-all cursor-pointer hover:text-slate-50">{`Settings >`}</p>
+        </ControlsModal>
       </div>
     </div>
   );

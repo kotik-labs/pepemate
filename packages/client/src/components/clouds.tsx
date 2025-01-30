@@ -1,18 +1,18 @@
 import { cn, rngChoice } from "@/lib/utils";
 
-import cloud1 from "../../../public/clouds/cloud-1.png";
-import cloud2 from "../../../public/clouds/cloud-2.png";
-import cloud3 from "../../../public/clouds/cloud-3.png";
-import cloud4 from "../../../public/clouds/cloud-4.png";
-import cloud6 from "../../../public/clouds/cloud-6.png";
-import cloud7 from "../../../public/clouds/cloud-7.png";
-import cloud8 from "../../../public/clouds/cloud-8.png";
-import cloud9 from "../../../public/clouds/cloud-9.png";
-import cloud10 from "../../../public/clouds/cloud-10.png";
-import cloud11 from "../../../public/clouds/cloud-11.png";
-import cloud12 from "../../../public/clouds/cloud-12.png";
-import cloud13 from "../../../public/clouds/cloud-13.png";
-import cloud14 from "../../../public/clouds/cloud-14.png";
+import cloud1 from "../../public/clouds/cloud-1.png";
+import cloud2 from "../../public/clouds/cloud-2.png";
+import cloud3 from "../../public/clouds/cloud-3.png";
+import cloud4 from "../../public/clouds/cloud-4.png";
+import cloud6 from "../../public/clouds/cloud-6.png";
+import cloud7 from "../../public/clouds/cloud-7.png";
+import cloud8 from "../../public/clouds/cloud-8.png";
+import cloud9 from "../../public/clouds/cloud-9.png";
+import cloud10 from "../../public/clouds/cloud-10.png";
+import cloud11 from "../../public/clouds/cloud-11.png";
+import cloud12 from "../../public/clouds/cloud-12.png";
+import cloud13 from "../../public/clouds/cloud-13.png";
+import cloud14 from "../../public/clouds/cloud-14.png";
 
 
 export const Clouds = (props: { maxClouds?: number }) => {

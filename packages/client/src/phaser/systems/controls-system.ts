@@ -2,24 +2,13 @@ import { Direction } from "@/types";
 import { PhaserLayer } from "../create-phaser-layer";
 import { getComponentValue, defineEnterSystem, Has } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Key } from "@latticexyz/phaserx";
-
-const INPUTS = ["Up", "Down", "Left", "Right", "Primary", "Secondary"] as const;
-type Inputs = (typeof INPUTS)[number];
-
-const KeyBindings: Record<Inputs, Key> = {
-  Up: "UP",
-  Down: "DOWN",
-  Left: "LEFT",
-  Right: "RIGHT",
-  Primary: "Z",
-  Secondary: "X",
-};
+import { ANIMATION_INTERVAL } from "@/constants";
+import { getBrowserControls } from "@/lib/utils";
 
 export function createControlSystem(layer: PhaserLayer) {
   const {
     scenes: {
-      Main: { input },
+      Main: { input, phaserScene },
     },
     network: {
       world,
@@ -38,67 +27,58 @@ export function createControlSystem(layer: PhaserLayer) {
     if (!session || !localSession || session.session !== localSession.id)
       return;
 
-    // input.pointerdown$.subscribe((event) => {
-    //   if (!event.pointer.leftButtonDown()) return;
+    input.pointerdown$.subscribe((event) => {
+      if (!event.pointer || !event.pointer.leftButtonDown()) return;
+      spawn();
+    });
 
-    //   const { x, y } = pixelCoordToTileCoord(
-    //     { x: event.pointer.worldX, y: event.pointer.worldY },
-    //     TILE_WIDTH,
-    //     TILE_HEIGHT
-    //   );
+    setInterval(async () => {
+      if (!phaserScene.input.keyboard) return;
 
-    //   spawn(x, y);
-    // });
+      const keyObjects =
+        phaserScene.input.keyboard!.addKeys(getBrowserControls());
+      const { up, down, left, right } = keyObjects as any;
+
+      if (up.isDown) await move(Direction.Up);
+      if (down.isDown) await move(Direction.Down);
+      if (left.isDown) await move(Direction.Left);
+      if (right.isDown) await move(Direction.Right);
+    }, ANIMATION_INTERVAL);
 
     input.onKeyPress(
-      (key) => Object.values(KeyBindings).some((k) => key.has(k)),
-      () => spawn()
+      (key) => {
+        const controls = getBrowserControls();
+        return key.has(controls.primary);
+      },
+      () => placeBomb()
     );
-
-    // UP movements
     input.onKeyPress(
-      (key) => key.has(KeyBindings.Up) && key.has(KeyBindings.Secondary),
+      (key) => {
+        const controls = getBrowserControls();
+        return key.has(controls.up) && key.has(controls.secondary);
+      },
       () => batchMove(Direction.Up, 4)
     );
     input.onKeyPress(
-      (key) => key.has(KeyBindings.Up) && !key.has(KeyBindings.Secondary),
-      () => move(Direction.Up)
-    );
-
-    // LEFT movements
-    input.onKeyPress(
-      (key) => key.has(KeyBindings.Left) && key.has(KeyBindings.Secondary),
+      (key) => {
+        const controls = getBrowserControls();
+        return key.has(controls.left) && key.has(controls.secondary);
+      },
       () => batchMove(Direction.Left, 4)
     );
     input.onKeyPress(
-      (key) => key.has(KeyBindings.Left) && !key.has(KeyBindings.Secondary),
-      () => move(Direction.Left)
-    );
-
-    // DOWN movements
-    input.onKeyPress(
-      (key) => key.has(KeyBindings.Down) && key.has(KeyBindings.Secondary),
+      (key) => {
+        const controls = getBrowserControls();
+        return key.has(controls.down) && key.has(controls.secondary);
+      },
       () => batchMove(Direction.Down, 4)
     );
     input.onKeyPress(
-      (key) => key.has(KeyBindings.Down) && !key.has(KeyBindings.Secondary),
-      () => move(Direction.Down)
-    );
-
-    // RIGHT movements
-    input.onKeyPress(
-      (key) => key.has(KeyBindings.Right) && key.has(KeyBindings.Secondary),
+      (key) => {
+        const controls = getBrowserControls();
+        return key.has(controls.right) && key.has(controls.secondary);
+      },
       () => batchMove(Direction.Right, 4)
-    );
-    input.onKeyPress(
-      (key) => key.has(KeyBindings.Right) && !key.has(KeyBindings.Secondary),
-      () => move(Direction.Right)
-    );
-
-    // BOMB
-    input.onKeyPress(
-      (key) => key.has(KeyBindings.Primary),
-      () => placeBomb()
     );
   });
 }

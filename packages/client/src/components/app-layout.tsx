@@ -1,6 +1,6 @@
 import { AccountButton } from "@latticexyz/entrykit/internal";
 import { Synced } from "@/components/mud/synced";
-import { Clouds } from "@/components/ui/clouds";
+import { Clouds } from "@/components/clouds";
 import { Outlet } from "react-router";
 
 export function AppLayout() {

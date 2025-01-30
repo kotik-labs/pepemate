@@ -1,8 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 import { TileAnimationKey, Tileset } from "./artTypes/world";
 import { Animations, Direction, Sprites } from "./types";
+import { Key } from "@latticexyz/phaserx";
 
-export const ZERO_ENTITY = "0x0000000000000000000000000000000000000000000000000000000000000000" as Entity;
+export const ZERO_ENTITY =
+  "0x0000000000000000000000000000000000000000000000000000000000000000" as Entity;
 
 export const ANIMATION_INTERVAL = 80;
 export const TILE_ANIMATION_INTERVAL = 80;
@@ -15,6 +17,17 @@ export const DEFAULT_SCALE = 2.6;
 export const MAX_TICKS_PER_BLOCK = 12;
 export const MAX_TICK_BLOCK_DELAY = 1;
 
+export const INPUTS = ["up", "down", "left", "right", "primary", "secondary"] as const;
+export type Inputs = (typeof INPUTS)[number];
+
+export const DEFAULT_KEYBINDINGS: Record<Inputs, Key> = {
+  up: "W",
+  down: "S",
+  left: "A",
+  right: "D",
+  primary: "J",
+  secondary: "I",
+};
 
 export const DIR_LOOKUP = [
   [-1, 0],

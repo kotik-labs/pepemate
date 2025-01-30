@@ -8,6 +8,7 @@ import { Has, HasValue } from "@latticexyz/recs";
 import { useNetworkLayer } from "@/hooks/use-network-layer";
 import { useWorldContract, WorldContract } from "@/hooks/use-world-contract";
 import { NotConnected } from "@/components/mud/not-connected";
+import { ControlsModal } from "@/components/controls-modal";
 
 export type SessionListProps = {
   worldContract: WorldContract;
@@ -66,15 +67,22 @@ export function Sessions() {
   if (!worldContract) return <NotConnected />;
 
   return (
-    <Card className="w-96 bg-black text-white">
-      <CardContent>
-        <div>
-          <div className="my-4">
-            <p>Sessions</p>
+    <div className="flex flex-col items-center gap-2">
+      <Card className="w-96 bg-black text-white">
+        <CardContent>
+          <div>
+            <div className="my-4">
+              <p>Sessions</p>
+            </div>
+            <SessionList worldContract={worldContract} />
           </div>
-          <SessionList worldContract={worldContract} />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <div className="w-full text-right">
+        <ControlsModal>
+          <p className="transition-all cursor-pointer hover:text-slate-50">{`Settings >`}</p>
+        </ControlsModal>
+      </div>
+    </div>
   );
 }
