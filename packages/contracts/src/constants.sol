@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import {TileType, Direction} from "./codegen/common.sol";
 
-uint32 constant MAX_TICKS_PER_BLOCK = 12;
+uint32 constant MAX_TICKS_PER_BLOCK = 70;
 uint32 constant MAX_TICK_BLOCK_DELAY = 1;
 
 uint32 constant MOVE_COST = 1;

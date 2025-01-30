@@ -6,7 +6,7 @@ import { Key } from "@latticexyz/phaserx";
 export const ZERO_ENTITY =
   "0x0000000000000000000000000000000000000000000000000000000000000000" as Entity;
 
-export const ANIMATION_INTERVAL = 80;
+export const ANIMATION_INTERVAL = 80 * 8;
 export const TILE_ANIMATION_INTERVAL = 80;
 export const TILE_HEIGHT = 16;
 export const TILE_WIDTH = 16;
@@ -14,7 +14,7 @@ export const MAX_WIDTH = 15;
 export const MAX_HEIGHT = 15;
 export const DEFAULT_SCALE = 2.6;
 
-export const MAX_TICKS_PER_BLOCK = 12;
+export const MAX_TICKS_PER_BLOCK = 70;
 export const MAX_TICK_BLOCK_DELAY = 1;
 
 export const INPUTS = ["up", "down", "left", "right", "primary", "secondary"] as const;

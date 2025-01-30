@@ -12,7 +12,13 @@ export const url = new URL(window.location.href);
 export const chains = [
   redstone,
   garnet,
-  rhodolite,
+  {
+    ...rhodolite,
+    contracts: {
+      ...rhodolite.contracts,
+      quarryPaymaster: undefined
+    },
+  },
   {
     ...anvil,
     contracts: {
