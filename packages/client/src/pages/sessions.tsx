@@ -9,6 +9,7 @@ import { useNetworkLayer } from "@/hooks/use-network-layer";
 import { useWorldContract, WorldContract } from "@/hooks/use-world-contract";
 import { NotConnected } from "@/components/mud/not-connected";
 import { ControlsModal } from "@/components/controls-modal";
+import { AddressStatus } from "@/components/mud/address-status";
 
 export type SessionListProps = {
   worldContract: WorldContract;
@@ -68,6 +69,7 @@ export function Sessions() {
 
   return (
     <div className="flex flex-col items-center gap-2">
+      <AddressStatus worldContract={worldContract} />
       <Card className="w-96 bg-black text-white">
         <CardContent>
           <div>
@@ -80,7 +82,7 @@ export function Sessions() {
       </Card>
       <div className="w-full text-right">
         <ControlsModal>
-          <p className="transition-all cursor-pointer hover:text-slate-50">{`Settings >`}</p>
+          <p className="transition-all cursor-pointer opacity-60 hover:opacity-100">{`Settings >`}</p>
         </ControlsModal>
       </div>
     </div>

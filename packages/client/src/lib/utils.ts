@@ -12,14 +12,14 @@ export const rngChoice = <T>(choices: T[]): T => {
   return choices[index];
 };
 
-export const shorten = (value: Hex) => {
-  const match = value.match(
-    /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/
+export const shorten = (value: Hex, charsCount: number = 4) => {
+  const regex = new RegExp(
+    String.raw`^(0x[a-zA-Z0-9]{${charsCount}})[a-zA-Z0-9]+([a-zA-Z0-9]{${charsCount}})$`
   );
+  const match = value.match(regex);
   if (!match) return value;
   return match[1] + "\u2026" + match[2];
 };
-
 
 export const getBrowserControls = (): typeof DEFAULT_KEYBINDINGS => {
   const controls = localStorage.getItem("controls");

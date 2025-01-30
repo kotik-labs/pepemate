@@ -1,5 +1,5 @@
 import { useEntityQuery } from "@latticexyz/react";
-import { getComponentValue, Has, HasValue } from "@latticexyz/recs";
+import { Entity, getComponentValue, Has, HasValue } from "@latticexyz/recs";
 
 import { Heart, Flame, Bomb, LogOut } from "lucide-react";
 import { decodeAbiParameters, Hex, parseAbiParameters } from "viem";
@@ -65,8 +65,16 @@ export const PlayerStatus = ({
 }: PlayerStatusProps) => {
   const {
     playerEntity,
-    components: { PlayerIndex, Session, Tick, FireCount, BombCount, BombUsed },
-    systemCalls: { joinSession, leaveSession },
+    components: {
+      Player,
+      PlayerIndex,
+      Session,
+      Tick,
+      FireCount,
+      BombCount,
+      BombUsed,
+    },
+    systemCalls: { joinSession, leaveSession, spawn },
   } = networkLayer;
   const playerImage = playerImages[playerIndex];
 
@@ -74,12 +82,32 @@ export const PlayerStatus = ({
     HasValue(PlayerIndex, { playerIndex }),
     HasValue(Session, { session }),
     Has(Tick),
+    Has(Player),
   ]);
+
+  const getStats = (entity: Entity) => {
+    const { isPlayer: isAlive } = getComponentValue(Player, entity) || {
+      isPlayer: false,
+    };
+    const { value: fireCount } = getComponentValue(FireCount, entity) || {
+      value: 0,
+    };
+    const { value: bombCount } = getComponentValue(BombUsed, entity) || {
+      value: 0,
+    };
+    const { value: bombMaxCount } = getComponentValue(BombCount, entity) || {
+      value: 0,
+    };
+    const { count: tickCount } = getComponentValue(Tick, entity) || {
+      count: 0,
+    };
+    return { isAlive, fireCount, bombCount, bombMaxCount, tickCount };
+  };
 
   if (!pEntity) {
     return (
       <Card
-        onClick={() => joinSession(session, playerIndex)}
+        onClick={() => joinSession(session, playerIndex).then(() => spawn())}
         className={cn(
           "opacity-50  hover:opacity-100",
           "w-36 border-0 bg-black rounded-none relative overflow-hidden cursor-pointer"
@@ -87,7 +115,7 @@ export const PlayerStatus = ({
       >
         <div className="flex items-center justify-center gap-2">
           <Avatar className="w-8 h-8 rounded border-2 border-yellow-500">
-            <AvatarImage src={playerImage} className="object-cover" />
+            <AvatarImage src={playerImage} className="object-cover pixelated" />
           </Avatar>
 
           <div className="flex-1 flex flex-col ">
@@ -103,30 +131,48 @@ export const PlayerStatus = ({
       </Card>
     );
   }
-
-  const [address] = decodeAbiParameters(parseAbiParameters("address"), pEntity as Hex);
+  const [address] = decodeAbiParameters(
+    parseAbiParameters("address"),
+    pEntity as Hex
+  );
 
   const isSelf = pEntity === playerEntity;
-  const { value: fireCount } = getComponentValue(FireCount, pEntity) || {
-    value: 0,
-  };
-  const { value: bombCount } = getComponentValue(BombUsed, pEntity) || {
-    value: 0,
-  };
-  const { value: bombMaxCount } = getComponentValue(BombCount, pEntity) || {
-    value: 0,
-  };
-  const { count: tickCount } = getComponentValue(Tick, pEntity) || {
-    count: 0,
-  };
-
+  const { isAlive, fireCount, bombCount, bombMaxCount, tickCount } =
+    getStats(pEntity);
   const stamina = (tickCount / MAX_TICKS_PER_BLOCK) * 100;
+
+  if (!isAlive) {
+    return (
+      <Card
+        className={cn(
+          "opacity-50",
+          "w-36 border-0 bg-black rounded-none relative overflow-hidden cursor-pointer"
+        )}
+      >
+        <div className="flex items-center justify-center gap-2">
+          <Avatar className="w-8 h-8 rounded border-2 border-yellow-500">
+            <AvatarImage src={playerImage} className="object-cover pixelated" />
+          </Avatar>
+
+          <div className="flex-1 flex flex-col ">
+            <div className="flex-1 space-y-4 text-center text-red-500">
+              <span className="xs:text-md text-xs font-bold">DEAD</span>
+            </div>
+          </div>
+        </div>
+        <Progress
+          value={0}
+          className="h-1 mt-2 w-full pixelated border bg-transparent"
+        />
+      </Card>
+    );
+  }
 
   return (
     <Card className=" w-36 border-0 bg-black rounded-none relative overflow-hidden">
       <div className="flex items-start gap-2">
         <Avatar className="w-8 h-8 rounded border-2 border-yellow-500">
-          <AvatarImage src={playerImage} className="object-cover" />
+          <AvatarImage src={playerImage} className="object-cover pixelated" />
         </Avatar>
 
         <div className="flex-1 flex flex-col gap-1 max-w-full">

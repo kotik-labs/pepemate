@@ -48,7 +48,7 @@ export const GameScene = ({ session, worldContract }: Props) => {
       </div>
       <div className="w-full text-right">
         <ControlsModal>
-          <p className="transition-all cursor-pointer hover:text-slate-50">{`Settings >`}</p>
+          <p className="transition-all cursor-pointer opacity-60 hover:opacity-100">{`Settings >`}</p>
         </ControlsModal>
       </div>
     </div>
