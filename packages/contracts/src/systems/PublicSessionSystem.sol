@@ -10,18 +10,6 @@ import {
 import {TILE_SIZE, BASE_SPEED, TILE_HALF} from "../constants.sol";
 import {Entity} from "../Entity.sol";
 
-/*
-Session:
-flow:
-"Create Session" on sessions page
-select map + amount of blocks placed + min bet to enter
-when 4 players joined - call start game with vesting 10 secs
-if user leaves - he loss his bet
-every player have 3 lifes per match
-"dead" players can still interact with game, to eliminate other players and receive liquidation fee
-when one user is alive - trigger "resolveSession"
-when session resolved - redistribute eth to players
-*/
 
 contract PublicSessionSystem is System {
     function createPublic(uint256 id, Entity map) public returns (Entity session) {
