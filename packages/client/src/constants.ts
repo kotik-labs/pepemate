@@ -51,6 +51,20 @@ export const TILESET = [
   Tileset.Spawner,
 ] as const;
 
+export const TILESET_COLORS = [
+  "#000000",
+  "#3F9B0B",
+  "#D3D3D3",
+  "#808080",
+  "#FFA500",
+  "#000000",
+  "#ADD8E6",
+  "#FF0000",
+  "#0000FF",
+  "#FFFF00",
+  "#FF0080"
+] as const;
+
 export const AnimatedTiles: Partial<Record<Tileset, TileAnimationKey>> = {
   [Tileset.Bomb]: TileAnimationKey.Bomb,
   [Tileset.Spawner]: TileAnimationKey.Spawner,

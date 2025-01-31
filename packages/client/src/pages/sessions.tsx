@@ -2,63 +2,53 @@ import { Card, CardContent } from "@/components/ui/card";
 import { shorten } from "@/lib/utils";
 import { Link } from "react-router";
 
-import { Hex } from "viem";
+import { Hex, toBytes } from "viem";
 import { useEntityQuery } from "@latticexyz/react";
-import { Has, HasValue } from "@latticexyz/recs";
-import { useNetworkLayer } from "@/hooks/use-network-layer";
-import { useWorldContract, WorldContract } from "@/hooks/use-world-contract";
+import { Entity, HasValue } from "@latticexyz/recs";
+import { useWorldContract } from "@/hooks/use-world-contract";
 import { NotConnected } from "@/components/mud/not-connected";
 import { ControlsModal } from "@/components/controls-modal";
 import { AddressStatus } from "@/components/mud/address-status";
+import { TilemapPreview } from "@/components/mud/tilemap-preview";
+import { useSessionComponents } from "@/hooks/use-sesssion-components";
+import { components } from "@/lib/mud/recs";
 
-export type SessionListProps = {
-  worldContract: WorldContract;
-};
+const { Session } = components;
 
-export const SessionList = ({ worldContract }: SessionListProps) => {
-  const {
-    components: { Session },
-  } = useNetworkLayer(worldContract);
-
+export const SessionList = () => {
   const sessions = useEntityQuery([HasValue(Session, { sessionType: 1 })]);
 
   return (
     <div className="flex flex-col justify-start gap-4">
       {sessions.map((session, i) => (
-        <SessionItem
-          key={i}
-          worldContract={worldContract}
-          session={session as Hex}
-        />
+        <SessionItem key={i} session={session as Hex} />
       ))}
     </div>
   );
 };
 
-export type SessionItemProps = {
-  worldContract: WorldContract;
-  session: Hex;
-};
+export const SessionItem = ({ session }: { session: Hex }) => {
+  const { sessionType, onlineCount, map } = useSessionComponents(
+    session as Entity
+  );
 
-export const SessionItem = ({ worldContract, session }: SessionItemProps) => {
-  const {
-    components: { EntitySession, Tick },
-  } = useNetworkLayer(worldContract);
-
-  const players = useEntityQuery([
-    HasValue(EntitySession, { session }),
-    Has(Tick),
-  ]);
-
-  const playerCount = players.length;
+  if (sessionType !== 1) return;
 
   return (
-    <Link
-      className="ring-2 px-2 rounded-md ring-slate-700 hover:ring-slate-50 flex justify-between"
-      to={`/${session}`}
-    >
-      <span>{shorten(session)}</span>
-      <span>{playerCount}/4</span>
+    <Link to={`/${session}`}>
+      <div className="ring-2 rounded-md ring-slate-700 hover:ring-slate-50 flex gap-2 items-center">
+        <TilemapPreview
+          width={45}
+          height={45}
+          tileSize={4}
+          terrain={toBytes(map.terrain || "0x0")}
+        />
+
+        <div className="flex flex-col gap-1 py-1">
+          <span className="text-sm">{shorten(session, 6)}</span>
+          <span className="text-xs">{onlineCount}/4 players</span>
+        </div>
+      </div>
     </Link>
   );
 };
@@ -77,7 +67,7 @@ export function Sessions() {
             <div className="my-4">
               <p>Sessions</p>
             </div>
-            <SessionList worldContract={worldContract} />
+            <SessionList />
           </div>
         </CardContent>
       </Card>

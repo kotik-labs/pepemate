@@ -8,6 +8,7 @@ import { IMapSystem } from "./IMapSystem.sol";
 import { IMovementSystem } from "./IMovementSystem.sol";
 import { IPlaceBombSystem } from "./IPlaceBombSystem.sol";
 import { IPublicSessionSystem } from "./IPublicSessionSystem.sol";
+import { IRankedSessionSystem } from "./IRankedSessionSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { ITriggerBombSystem } from "./ITriggerBombSystem.sol";
 
@@ -24,6 +25,7 @@ interface IWorld is
   IMovementSystem,
   IPlaceBombSystem,
   IPublicSessionSystem,
+  IRankedSessionSystem,
   ISpawnSystem,
   ITriggerBombSystem
 {}

@@ -10,14 +10,17 @@ export const useSessionComponents = (session: Entity) => {
   const map = useComponentValue(SessionMap, session);
   const sessionType = useComponentValue(Session, session);
 
+  const playersArr = (players?.players || [
+    ZERO_ENTITY,
+    ZERO_ENTITY,
+    ZERO_ENTITY,
+    ZERO_ENTITY,
+  ]) as Entity[];
+
   return {
     sessionType: sessionType?.sessionType,
     map: { terrain: map?.terrain, mapId: map?.mapId },
-    players: (players?.players || [
-      ZERO_ENTITY,
-      ZERO_ENTITY,
-      ZERO_ENTITY,
-      ZERO_ENTITY,
-    ]) as Entity[],
+    onlineCount: playersArr.filter((p) => p !== ZERO_ENTITY).length,
+    players: playersArr,
   };
 };
