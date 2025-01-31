@@ -4,6 +4,9 @@ import { getComponentValue, defineEnterSystem, Has } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ANIMATION_INTERVAL } from "@/constants";
 import { getBrowserControls } from "@/lib/utils";
+import { Input } from "phaser";
+
+let controlsInterval: ReturnType<typeof setInterval>;
 
 export function createControlSystem(layer: PhaserLayer) {
   const {
@@ -13,15 +16,15 @@ export function createControlSystem(layer: PhaserLayer) {
     network: {
       world,
       playerEntity,
-      components: { LocalSession, Session },
+      components: { LocalSession, EntitySession },
       systemCalls: { spawn, move, placeBomb, batchMove },
     },
   } = layer;
 
-  defineEnterSystem(world, [Has(Session)], ({ entity }) => {
+  defineEnterSystem(world, [Has(EntitySession)], ({ entity }) => {
     if (entity !== playerEntity) return;
 
-    const session = getComponentValue(Session, entity);
+    const session = getComponentValue(EntitySession, entity);
     const localSession = getComponentValue(LocalSession, singletonEntity);
 
     if (!session || !localSession || session.session !== localSession.id)
@@ -31,19 +34,6 @@ export function createControlSystem(layer: PhaserLayer) {
       if (!event.pointer || !event.pointer.leftButtonDown()) return;
       spawn();
     });
-
-    setInterval(async () => {
-      if (!phaserScene.input.keyboard) return;
-
-      const keyObjects =
-        phaserScene.input.keyboard!.addKeys(getBrowserControls());
-      const { up, down, left, right } = keyObjects as any;
-
-      if (up.isDown) await move(Direction.Up);
-      if (down.isDown) await move(Direction.Down);
-      if (left.isDown) await move(Direction.Left);
-      if (right.isDown) await move(Direction.Right);
-    }, ANIMATION_INTERVAL);
 
     input.onKeyPress(
       (key) => {
@@ -80,5 +70,27 @@ export function createControlSystem(layer: PhaserLayer) {
       },
       () => batchMove(Direction.Right, 4)
     );
+
+    if (controlsInterval !== undefined) {
+      clearInterval(controlsInterval);
+    }
+
+    controlsInterval = setInterval(async () => {
+      const keyObjects =
+        phaserScene.input.keyboard?.addKeys(getBrowserControls());
+
+      if (!keyObjects) return;
+      const { up, down, left, right } = keyObjects as {
+        up: Input.Keyboard.Key;
+        down: Input.Keyboard.Key;
+        left: Input.Keyboard.Key;
+        right: Input.Keyboard.Key;
+      };
+
+      if (up.isDown) await move(Direction.Up);
+      if (down.isDown) await move(Direction.Down);
+      if (left.isDown) await move(Direction.Left);
+      if (right.isDown) await move(Direction.Right);
+    }, ANIMATION_INTERVAL);
   });
 }

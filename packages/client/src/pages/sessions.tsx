@@ -17,10 +17,10 @@ export type SessionListProps = {
 
 export const SessionList = ({ worldContract }: SessionListProps) => {
   const {
-    components: { SessionState },
+    components: { Session },
   } = useNetworkLayer(worldContract);
 
-  const sessions = useEntityQuery([Has(SessionState)]);
+  const sessions = useEntityQuery([Has(Session)]);
 
   return (
     <div className="flex flex-col justify-start gap-4">
@@ -42,13 +42,14 @@ export type SessionItemProps = {
 
 export const SessionItem = ({ worldContract, session }: SessionItemProps) => {
   const {
-    components: { Session, PlayerIndex },
+    components: { EntitySession, Tick },
   } = useNetworkLayer(worldContract);
 
   const players = useEntityQuery([
-    HasValue(Session, { session }),
-    Has(PlayerIndex),
+    HasValue(EntitySession, { session }),
+    Has(Tick)
   ]);
+
   const playerCount = players.length;
 
   return (

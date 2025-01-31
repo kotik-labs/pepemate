@@ -9,7 +9,7 @@ export default defineWorld({
     Entity: { type: "bytes32", filePath: "./src/Entity.sol" },
   },
   enums: {
-    SessionStatus: ["InLobby", "Playing"],
+    SessionType: ["None", "Public", "Ranked"],
     TileType: [
       "None",
       "Grass",
@@ -38,9 +38,9 @@ export default defineWorld({
     Map: {
       key: ["id"],
       schema: {
-        id: "bytes32",
+        id: "Entity",
         spawnIndexes: "uint32[4]",
-        tileMap: "bytes",
+        terrain: "bytes",
       },
       codegen: {
         dataStruct: false,
@@ -48,16 +48,37 @@ export default defineWorld({
     },
 
     /// SESSION COMPONENTS
-    SessionState: {
+    Session: {
+      key: ["id"],
+      schema: { id: "Entity", sessionType: "SessionType" },
+      codegen: { dataStruct: false },
+    },
+
+    SessionMap: {
+      key: ["id"],
+      schema: { id: "Entity", mapId: "Entity", terrain: "bytes" },
+      codegen: { dataStruct: false },
+    },
+
+    SessionPlayers: {
+      key: ["id"],
+      schema: { id: "Entity", players: "bytes32[4]" },
+      codegen: { dataStruct: false },
+    },
+
+    SessionHealth: {
       key: ["id"],
       schema: {
         id: "Entity",
-        // mapId: "Entity",
-        status: "SessionStatus",
-        playerBitmap: "uint8",
-        spawnIndexes: "uint32[4]",
-        map: "bytes",
+        health: "uint8[4]",
       },
+      codegen: { dataStruct: false },
+    },
+
+    EntitySession: {
+      key: ["id"],
+      schema: { id: "Entity", session: "Entity" },
+      codegen: { dataStruct: false },
     },
 
     TileLookup: {
@@ -71,18 +92,6 @@ export default defineWorld({
       codegen: {
         dataStruct: false,
       },
-    },
-
-    Session: {
-      key: ["id"],
-      schema: { id: "Entity", session: "Entity" },
-      codegen: { dataStruct: false },
-    },
-
-    PlayerIndex: {
-      key: ["id"],
-      schema: { id: "Entity", playerIndex: "uint8" },
-      codegen: { dataStruct: false },
     },
 
     /// BOMB COMPONENTS

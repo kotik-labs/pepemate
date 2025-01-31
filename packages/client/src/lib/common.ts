@@ -16,7 +16,7 @@ export const chains = [
     ...rhodolite,
     contracts: {
       ...rhodolite.contracts,
-      quarryPaymaster: undefined
+      quarryPaymaster: undefined,
     },
   },
   {

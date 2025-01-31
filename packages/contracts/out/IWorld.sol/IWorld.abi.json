@@ -606,7 +606,7 @@
   },
   {
     "type": "function",
-    "name": "pepemate__createSession",
+    "name": "pepemate__createPublic",
     "inputs": [
       {
         "name": "id",
@@ -614,9 +614,9 @@
         "internalType": "uint256"
       },
       {
-        "name": "mapId",
+        "name": "map",
         "type": "bytes32",
-        "internalType": "bytes32"
+        "internalType": "Entity"
       }
     ],
     "outputs": [
@@ -630,7 +630,7 @@
   },
   {
     "type": "function",
-    "name": "pepemate__joinSession",
+    "name": "pepemate__joinPublic",
     "inputs": [
       {
         "name": "session",
@@ -648,7 +648,7 @@
   },
   {
     "type": "function",
-    "name": "pepemate__leaveSession",
+    "name": "pepemate__leavePublic",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"

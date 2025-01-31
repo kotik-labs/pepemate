@@ -16,17 +16,17 @@ export function createTilemapSystem(layer: PhaserLayer) {
     },
     network: {
       world,
-      components: { SessionState, LocalSession },
+      components: { SessionMap, LocalSession },
     },
   } = layer;
 
-  defineSystem(world, [Has(SessionState)], ({ entity, value }) => {
+  defineSystem(world, [Has(SessionMap)], ({ entity, value }) => {
     const localSession = getComponentValue(LocalSession, singletonEntity);
     const session = value[0];
 
     if (!session || !localSession || localSession.id !== entity) return;
 
-    const tileMap = toBytes(session.map as string);
+    const tileMap = toBytes(session.terrain as string);
 
     for (let y = 0; y < MAX_HEIGHT; y++) {
       for (let x = 0; x < MAX_WIDTH; x++) {

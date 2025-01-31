@@ -7,11 +7,11 @@ import {
     Player,
     Position,
     TileLookup,
-    SessionState,
     FireCount,
     BombCount,
     BombUsed,
-    Session,
+    EntitySession,
+    SessionMap,
     LastBombIndex
 } from "../codegen/index.sol";
 import {Direction, EntityType, TileType} from "../codegen/common.sol";
@@ -35,13 +35,13 @@ contract MovementSystem is System {
 
     function _move(Direction direction) internal {
         Entity entity = LibPlayer.entityKey(_msgSender());
-        Entity session = Session.get(entity);
+        Entity session = EntitySession.get(entity);
 
         require(!session.isEmpty(), "Session not found");
         // require(Owner.get(entity) == _msgSender(), "Player is not controlled by sender");
         require(Player.get(entity), "Player is dead");
 
-        bytes memory map = SessionState.getMap(session);
+        bytes memory map = SessionMap.getTerrain(session);
         (uint32 oldX, uint32 oldY) = Position.get(entity);
         (uint32 nextX, uint32 nextY) = LibPlayer.move(map, oldX, oldY, BASE_SPEED, direction);
 
@@ -75,7 +75,7 @@ contract MovementSystem is System {
         TileType powerUp;
         (powerUp, map) = LibTilemap.pickupPowerup(map, tileIndex);
         if (powerUp != TileType.None) {
-            SessionState.setMap(session, map);
+            SessionMap.setTerrain(session, map);
         }
 
         if (powerUp == TileType.RangeUp) {
@@ -89,7 +89,7 @@ contract MovementSystem is System {
 
     function _updatePlayerLookup(Entity session, Entity entity, uint32 oldIndex, uint32 nextIndex) internal {
         if (oldIndex == nextIndex) return;
-        TileLookup.set(session, oldIndex, EntityType.Player, Entity.wrap(0));
+        TileLookup.deleteRecord(session, oldIndex, EntityType.Player);
         TileLookup.set(session, nextIndex, EntityType.Player, entity);
     }
 }

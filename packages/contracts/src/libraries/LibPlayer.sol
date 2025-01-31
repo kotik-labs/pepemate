@@ -51,5 +51,15 @@ library LibPlayer {
         return applyDirection(x, y, speed, direction);
     }
 
-    
+    function playerIndex(Entity player, bytes32[4] memory players) internal pure returns (bool, uint256) {
+        bytes32 _p = player.unwrap();
+        
+        for (uint256 i = 0; i < 4; ++i) {
+            if (_p == players[i]) {
+                return (true, i);
+            }
+        }
+
+        return(false, type(uint256).max);
+    }
 }

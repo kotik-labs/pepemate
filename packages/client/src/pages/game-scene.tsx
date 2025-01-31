@@ -1,37 +1,55 @@
-import { setComponent } from "@latticexyz/recs";
+import { Entity, setComponent } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useParams } from "react-router";
-import { range } from "lodash";
 import { Hex } from "viem";
 
-import { useNetworkLayer } from "@/hooks/use-network-layer";
+import { NetworkLayer, useNetworkLayer } from "@/hooks/use-network-layer";
 import { useWorldContract, WorldContract } from "@/hooks/use-world-contract";
 import { PlayerStatus } from "@/components/mud/player-status";
 import { PhaserWrapper } from "@/components/mud/phaser-wrapper";
-import { cn } from "@/lib/utils";
 import { NotConnected } from "@/components/mud/not-connected";
 import { ControlsModal } from "@/components/controls-modal";
+import { components } from "@/lib/mud/recs";
+import { cn } from "@/lib/utils";
+import { useSessionComponents } from "@/hooks/use-sesssion-components";
 
 type Props = {
   worldContract: WorldContract;
   session: Hex;
 };
 
-export const GameScene = ({ session, worldContract }: Props) => {
-  const networkLayer = useNetworkLayer(worldContract);
-  setComponent(networkLayer.components.LocalSession, singletonEntity, {
-    id: session,
-  });
+type GameHUDProps = {
+  networkLayer: NetworkLayer;
+  session: Hex;
+};
 
-  const totalPlayers = 4;
-  const playerStatuses = range(0, totalPlayers).map((i) => (
+export const GameHUD = ({ networkLayer, session }: GameHUDProps) => {
+  const {
+    playerEntity,
+    systemCalls: { joinSession, leaveSession, spawn },
+  } = networkLayer;
+
+  const { players } = useSessionComponents(session as Entity);
+
+  const playerStatuses = players.map((player, i) => (
     <PlayerStatus
       key={i}
+      isSelf={player === playerEntity}
+      playerEntity={player}
       playerIndex={i}
-      session={session}
-      networkLayer={networkLayer}
+      onStart={() => joinSession(session, i).then(() => spawn())}
+      onLeave={() => leaveSession()}
     />
   ));
+  return (
+    <div className={cn("w-full flex justify-between", "gap-2")}>
+      {playerStatuses}
+    </div>
+  );
+};
+
+export const GameScene = ({ session, worldContract }: Props) => {
+  const networkLayer = useNetworkLayer(worldContract);
 
   return (
     <div className="flex flex-col justify-center items-center h-full gap-2">
@@ -41,9 +59,7 @@ export const GameScene = ({ session, worldContract }: Props) => {
           "gap-3 p-3"
         )}
       >
-        <div className={cn("w-full flex justify-between", "gap-2")}>
-          {playerStatuses}
-        </div>
+        <GameHUD session={session} networkLayer={networkLayer} />
         <PhaserWrapper networkLayer={networkLayer} />
       </div>
       <div className="w-full text-right">
@@ -61,6 +77,10 @@ export function Game() {
 
   if (!worldContract) return <NotConnected />;
   if (!session) return <NotConnected />;
+
+  setComponent(components.LocalSession, singletonEntity, {
+    id: session,
+  });
 
   return <GameScene session={session as Hex} worldContract={worldContract} />;
 }

@@ -1,24 +1,24 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, getComponentValue, Has, HasValue } from "@latticexyz/recs";
-
+import { Entity } from "@latticexyz/recs";
 import { Heart, Flame, Bomb, LogOut } from "lucide-react";
 import { decodeAbiParameters, Hex, parseAbiParameters } from "viem";
-import { NetworkLayer } from "@/hooks/use-network-layer";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
+import { MAX_TICKS_PER_BLOCK, ZERO_ENTITY } from "@/constants";
+import { cn, shorten } from "@/lib/utils";
+import { usePlayerComponents } from "@/hooks/use-player-components";
 
 import playerA from "../../../public/playerA.png";
 import playerB from "../../../public/playerB.png";
 import playerC from "../../../public/playerC.png";
 import playerD from "../../../public/playerD.png";
-import { MAX_TICKS_PER_BLOCK } from "@/constants";
-import { cn, shorten } from "@/lib/utils";
 
 export type PlayerStatusProps = {
-  networkLayer: NetworkLayer;
-  session: Hex;
+  playerEntity: Entity;
   playerIndex: number;
+  isSelf: boolean;
+  onStart: VoidFunction;
+  onLeave: VoidFunction;
 };
 
 export type IconStatusProps = {
@@ -59,55 +59,32 @@ export const IconStatus = ({
 const playerImages = [playerA, playerB, playerC, playerD];
 
 export const PlayerStatus = ({
-  networkLayer,
-  session,
+  isSelf,
+  playerEntity,
   playerIndex,
+  onStart,
+  onLeave,
 }: PlayerStatusProps) => {
-  const {
-    playerEntity,
-    components: {
-      Player,
-      PlayerIndex,
-      Session,
-      Tick,
-      FireCount,
-      BombCount,
-      BombUsed,
-    },
-    systemCalls: { joinSession, leaveSession, spawn },
-  } = networkLayer;
   const playerImage = playerImages[playerIndex];
 
-  const [pEntity] = useEntityQuery([
-    HasValue(PlayerIndex, { playerIndex }),
-    HasValue(Session, { session }),
-    Has(Tick),
-    Has(Player),
-  ]);
+  const {
+    isPlayer: isAlive,
+    fireCount,
+    bombCount,
+    bombUsed,
+    tick: { count: tickCount },
+  } = usePlayerComponents(playerEntity);
 
-  const getStats = (entity: Entity) => {
-    const { isPlayer: isAlive } = getComponentValue(Player, entity) || {
-      isPlayer: false,
-    };
-    const { value: fireCount } = getComponentValue(FireCount, entity) || {
-      value: 0,
-    };
-    const { value: bombCount } = getComponentValue(BombUsed, entity) || {
-      value: 0,
-    };
-    const { value: bombMaxCount } = getComponentValue(BombCount, entity) || {
-      value: 0,
-    };
-    const { count: tickCount } = getComponentValue(Tick, entity) || {
-      count: 0,
-    };
-    return { isAlive, fireCount, bombCount, bombMaxCount, tickCount };
-  };
+  const stamina = (tickCount / MAX_TICKS_PER_BLOCK) * 100;
+  const [address] = decodeAbiParameters(
+    parseAbiParameters("address"),
+    playerEntity as Hex
+  );
 
-  if (!pEntity) {
+  if (playerEntity === ZERO_ENTITY) {
     return (
       <Card
-        onClick={() => joinSession(session, playerIndex).then(() => spawn())}
+        onClick={() => onStart()}
         className={cn(
           "opacity-50  hover:opacity-100",
           "w-36 border-0 bg-black rounded-none relative overflow-hidden cursor-pointer"
@@ -131,15 +108,6 @@ export const PlayerStatus = ({
       </Card>
     );
   }
-  const [address] = decodeAbiParameters(
-    parseAbiParameters("address"),
-    pEntity as Hex
-  );
-
-  const isSelf = pEntity === playerEntity;
-  const { isAlive, fireCount, bombCount, bombMaxCount, tickCount } =
-    getStats(pEntity);
-  const stamina = (tickCount / MAX_TICKS_PER_BLOCK) * 100;
 
   if (!isAlive) {
     return (
@@ -181,7 +149,7 @@ export const PlayerStatus = ({
               {shorten(address)}
             </span>
             <LogOut
-              onClick={() => (isSelf ? leaveSession() : null)}
+              onClick={() => (isSelf ? onLeave() : null)}
               className={cn(
                 "h-3 w-3 text-red-500 hover:text-red-800 cursor-pointer",
                 !isSelf
@@ -206,8 +174,8 @@ export const PlayerStatus = ({
             <IconStatus
               icon={Bomb}
               iconClassName={"text-purple-500"}
-              count={bombMaxCount - bombCount || 0}
-              max={bombMaxCount || 1}
+              count={bombCount - bombUsed || 0}
+              max={bombCount || 1}
             />
           </div>
         </div>

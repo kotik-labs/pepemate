@@ -19,17 +19,17 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 // Import user types
 import { Entity } from "../../Entity.sol";
 
-library PlayerIndex {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "PlayerIndex", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d617465000000000000506c61796572496e6465780000000000);
+library EntitySession {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "EntitySession", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d617465000000000000456e7469747953657373696f6e000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0001010001000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint8)
-  Schema constant _valueSchema = Schema.wrap(0x0001010000000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (bytes32)
+  Schema constant _valueSchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -46,7 +46,7 @@ library PlayerIndex {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](1);
-    fieldNames[0] = "playerIndex";
+    fieldNames[0] = "session";
   }
 
   /**
@@ -64,87 +64,87 @@ library PlayerIndex {
   }
 
   /**
-   * @notice Get playerIndex.
+   * @notice Get session.
    */
-  function getPlayerIndex(Entity id) internal view returns (uint8 playerIndex) {
+  function getSession(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get playerIndex.
+   * @notice Get session.
    */
-  function _getPlayerIndex(Entity id) internal view returns (uint8 playerIndex) {
+  function _getSession(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get playerIndex.
+   * @notice Get session.
    */
-  function get(Entity id) internal view returns (uint8 playerIndex) {
+  function get(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Get playerIndex.
+   * @notice Get session.
    */
-  function _get(Entity id) internal view returns (uint8 playerIndex) {
+  function _get(Entity id) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return Entity.wrap(bytes32(_blob));
   }
 
   /**
-   * @notice Set playerIndex.
+   * @notice Set session.
    */
-  function setPlayerIndex(Entity id, uint8 playerIndex) internal {
+  function setSession(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((playerIndex)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
-   * @notice Set playerIndex.
+   * @notice Set session.
    */
-  function _setPlayerIndex(Entity id, uint8 playerIndex) internal {
+  function _setSession(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((playerIndex)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
-   * @notice Set playerIndex.
+   * @notice Set session.
    */
-  function set(Entity id, uint8 playerIndex) internal {
+  function set(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((playerIndex)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
-   * @notice Set playerIndex.
+   * @notice Set session.
    */
-  function _set(Entity id, uint8 playerIndex) internal {
+  function _set(Entity id, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((playerIndex)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
 
   /**
@@ -171,8 +171,8 @@ library PlayerIndex {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint8 playerIndex) internal pure returns (bytes memory) {
-    return abi.encodePacked(playerIndex);
+  function encodeStatic(Entity session) internal pure returns (bytes memory) {
+    return abi.encodePacked(session);
   }
 
   /**
@@ -181,8 +181,8 @@ library PlayerIndex {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint8 playerIndex) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(playerIndex);
+  function encode(Entity session) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(session);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

@@ -1,5 +1,6 @@
 import {
   defineSystem,
+  Entity,
   getComponentValue,
   Has,
   HasValue,
@@ -29,6 +30,7 @@ const directions = (p0: Coord, p1: Coord) => {
   ];
 };
 
+
 export function createPlayerSystem(layer: PhaserLayer) {
   const {
     scenes: {
@@ -36,29 +38,41 @@ export function createPlayerSystem(layer: PhaserLayer) {
     },
     network: {
       world,
-      components: { Player, Position, LocalSession, Session, PlayerIndex },
+      components: {
+        Player,
+        Position,
+        LocalSession,
+        EntitySession,
+        SessionPlayers,
+      },
     },
   } = layer;
 
   defineSystem(
     world,
-    [
-      HasValue(Player, { isPlayer: true }),
-      Has(Session),
-      Has(Position),
-      Has(PlayerIndex),
-    ],
+    [HasValue(Player, { isPlayer: true }), Has(EntitySession), Has(Position)],
     ({ entity, value, component, type }) => {
       const localSession = getComponentValue(LocalSession, singletonEntity);
       if (!localSession) return;
 
-      const session = getComponentValue(Session, entity);
+      const session = getComponentValue(EntitySession, entity);
       if (!session || session.session !== localSession.id) return;
 
-      const playerIndex = getComponentValue(PlayerIndex, entity);
-      if (!playerIndex) return;
+      if (type === UpdateType.Exit) {
+        console.log("DEAD", { entity, value, type });
+        objectPool.remove(entity);
+        return;
+      }
 
-      const playerSprite = PlayerSprites[playerIndex.playerIndex];
+      const { players }: { players: string[] } = getComponentValue(
+        SessionPlayers,
+        session.session as Entity
+      ) || { players: [] };
+
+      const playerIndex = players.indexOf(entity);
+      if (playerIndex === -1) return;
+
+      const playerSprite = PlayerSprites[playerIndex];
       const texture = config.sprites[playerSprite];
       const moveAnimations = PlayerAnimationsLookup[playerSprite];
 
@@ -67,12 +81,6 @@ export function createPlayerSystem(layer: PhaserLayer) {
         const position = getComponentValue(Position, entity);
         if (!position || (position.x === 0 && position.y === 0)) return;
         drawPlayer(objectPool, entity, position, texture);
-      }
-
-      if (type === UpdateType.Exit) {
-        console.log("DEAD", { entity, value, type });
-        // TODO: draw death animation
-        objectPool.remove(entity);
       }
 
       if (type == UpdateType.Update && component.id === Position.id) {
@@ -86,8 +94,8 @@ export function createPlayerSystem(layer: PhaserLayer) {
           drawPlayer(objectPool, entity, coord, texture);
           return;
         }
-
-        // console.log("MOVE", { entity, value, type });
+        
+        console.log("MOVE", { entity, value, type });
         const [dirX, dirY] = directions(coord, prevCoord);
 
         objectPool.get(entity, "Sprite").setComponent({

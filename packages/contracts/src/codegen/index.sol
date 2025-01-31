@@ -5,10 +5,12 @@ pragma solidity >=0.8.24;
 
 import { Tick } from "./tables/Tick.sol";
 import { Map } from "./tables/Map.sol";
-import { SessionState, SessionStateData } from "./tables/SessionState.sol";
-import { TileLookup } from "./tables/TileLookup.sol";
 import { Session } from "./tables/Session.sol";
-import { PlayerIndex } from "./tables/PlayerIndex.sol";
+import { SessionMap } from "./tables/SessionMap.sol";
+import { SessionPlayers } from "./tables/SessionPlayers.sol";
+import { SessionHealth } from "./tables/SessionHealth.sol";
+import { EntitySession } from "./tables/EntitySession.sol";
+import { TileLookup } from "./tables/TileLookup.sol";
 import { BombIndex } from "./tables/BombIndex.sol";
 import { BombOwner } from "./tables/BombOwner.sol";
 import { BombRange } from "./tables/BombRange.sol";

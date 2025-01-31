@@ -18,18 +18,19 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
 import { Entity } from "../../Entity.sol";
+import { SessionType } from "../common.sol";
 
 library Session {
   // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "Session", typeId: RESOURCE_TABLE });`
   ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d61746500000000000053657373696f6e000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0001010001000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (bytes32)
-  Schema constant _valueSchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint8)
+  Schema constant _valueSchema = Schema.wrap(0x0001010000000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -46,7 +47,7 @@ library Session {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](1);
-    fieldNames[0] = "session";
+    fieldNames[0] = "sessionType";
   }
 
   /**
@@ -64,87 +65,87 @@ library Session {
   }
 
   /**
-   * @notice Get session.
+   * @notice Get sessionType.
    */
-  function getSession(Entity id) internal view returns (Entity session) {
+  function getSessionType(Entity id) internal view returns (SessionType sessionType) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return Entity.wrap(bytes32(_blob));
+    return SessionType(uint8(bytes1(_blob)));
   }
 
   /**
-   * @notice Get session.
+   * @notice Get sessionType.
    */
-  function _getSession(Entity id) internal view returns (Entity session) {
+  function _getSessionType(Entity id) internal view returns (SessionType sessionType) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return Entity.wrap(bytes32(_blob));
+    return SessionType(uint8(bytes1(_blob)));
   }
 
   /**
-   * @notice Get session.
+   * @notice Get sessionType.
    */
-  function get(Entity id) internal view returns (Entity session) {
+  function get(Entity id) internal view returns (SessionType sessionType) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return Entity.wrap(bytes32(_blob));
+    return SessionType(uint8(bytes1(_blob)));
   }
 
   /**
-   * @notice Get session.
+   * @notice Get sessionType.
    */
-  function _get(Entity id) internal view returns (Entity session) {
+  function _get(Entity id) internal view returns (SessionType sessionType) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return Entity.wrap(bytes32(_blob));
+    return SessionType(uint8(bytes1(_blob)));
   }
 
   /**
-   * @notice Set session.
+   * @notice Set sessionType.
    */
-  function setSession(Entity id, Entity session) internal {
+  function setSessionType(Entity id, SessionType sessionType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(sessionType)), _fieldLayout);
   }
 
   /**
-   * @notice Set session.
+   * @notice Set sessionType.
    */
-  function _setSession(Entity id, Entity session) internal {
+  function _setSessionType(Entity id, SessionType sessionType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(sessionType)), _fieldLayout);
   }
 
   /**
-   * @notice Set session.
+   * @notice Set sessionType.
    */
-  function set(Entity id, Entity session) internal {
+  function set(Entity id, SessionType sessionType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(sessionType)), _fieldLayout);
   }
 
   /**
-   * @notice Set session.
+   * @notice Set sessionType.
    */
-  function _set(Entity id, Entity session) internal {
+  function _set(Entity id, SessionType sessionType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(sessionType)), _fieldLayout);
   }
 
   /**
@@ -171,8 +172,8 @@ library Session {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(Entity session) internal pure returns (bytes memory) {
-    return abi.encodePacked(session);
+  function encodeStatic(SessionType sessionType) internal pure returns (bytes memory) {
+    return abi.encodePacked(sessionType);
   }
 
   /**
@@ -181,8 +182,8 @@ library Session {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(Entity session) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(session);
+  function encode(SessionType sessionType) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(sessionType);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

@@ -8,6 +8,7 @@ import {TileType} from "../src/codegen/common.sol";
 import {LibUtils, LibTilemap} from "../src/libraries/Libraries.sol";
 import {StoreSwitch} from "@latticexyz/store/src/StoreSwitch.sol";
 import {IWorld} from "../src/codegen/world/IWorld.sol";
+import {Entity} from "../src/Entity.sol";
 
 contract PostDeploy is Script {
     function run(address worldAddress) external {
@@ -65,18 +66,18 @@ contract PostDeploy is Script {
         ];
 
         (uint32[4] memory spawnIndexes, bytes memory terrain) = LibUtils.pack(mapDataA);
-        bytes32 mapKey = LibTilemap.entityKey(terrain);
+        Entity mapKey = LibTilemap.entityKey(terrain);
 
         // Start broadcasting transactions from the deployer account
         vm.startBroadcast(deployerPrivateKey);
         // ---------------------------------------------------------
         Map.set(mapKey, spawnIndexes, terrain);
 
-        IWorld(worldAddress).pepemate__createSession(1, mapKey);
-        IWorld(worldAddress).pepemate__createSession(2, mapKey);
-        IWorld(worldAddress).pepemate__createSession(3, mapKey);
-        IWorld(worldAddress).pepemate__createSession(4, mapKey);
-        IWorld(worldAddress).pepemate__createSession(5, mapKey);
+        IWorld(worldAddress).pepemate__createPublic(1, mapKey);
+        IWorld(worldAddress).pepemate__createPublic(2, mapKey);
+        IWorld(worldAddress).pepemate__createPublic(3, mapKey);
+        IWorld(worldAddress).pepemate__createPublic(4, mapKey);
+        IWorld(worldAddress).pepemate__createPublic(5, mapKey);
 
         // ---------------------------------------------------------
         vm.stopBroadcast();

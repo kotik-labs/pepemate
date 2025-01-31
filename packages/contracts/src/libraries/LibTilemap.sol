@@ -6,10 +6,11 @@ import {LibTile} from "./LibTile.sol";
 import {LibPowerup} from "./LibPowerup.sol";
 import {TileType, Direction} from "../codegen/common.sol";
 import {MAX_WIDTH, MAX_HEIGHT, TILE_SIZE, TILE_HALF} from "../constants.sol";
+import {Entity} from "../Entity.sol";
 
 library LibTilemap {
-    function entityKey(bytes memory map) internal pure returns (bytes32) {
-        return keccak256(map);
+    function entityKey(bytes memory map) internal pure returns (Entity) {
+        return Entity.wrap(keccak256(map));
     }
 
     function outOfBounds(uint32 x, uint32 y) internal pure returns (bool) {
@@ -29,11 +30,7 @@ library LibTilemap {
         return map;
     }
 
-    function fillWalls(uint32[4] memory spawnIndexes, bytes memory tileMap, uint256 maxWalls, uint256 seed)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function fillWalls(bytes memory tileMap, uint256 maxWalls, uint256 seed) internal pure returns (bytes memory) {
         uint256 rng = LibUtils.rngNext(seed);
         uint256 rngX;
         uint256 rngY;
@@ -51,8 +48,6 @@ library LibTilemap {
             tileMap = putTile(tileMap, LibTile.coordToIndex(uint32(rngX), uint32(rngY)), TileType.Wall);
             i++;
         }
-
-        // TODO: clean all neighbor wall around spawn indexes
 
         return tileMap;
     }

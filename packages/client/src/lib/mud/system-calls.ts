@@ -10,7 +10,7 @@
  */
 
 import { getComponentValue } from "@latticexyz/recs";
-import { ClientComponents } from "./client-components";
+import { ClientComponents } from "./recs";
 import { Hex } from "viem";
 import { NetworkSetupResult } from "../../hooks/use-network-setup";
 import { Direction } from "@/types";
@@ -66,7 +66,7 @@ export function createSystemCalls(
   };
 
   const joinSession = async (session: Hex, playerIndex: number) => {
-    const tx = await worldContract.write.pepemate__joinSession([
+    const tx = await worldContract.write.pepemate__joinPublic([
       session,
       playerIndex,
     ]);
@@ -74,7 +74,7 @@ export function createSystemCalls(
   };
 
   const leaveSession = async () => {
-    const tx = await worldContract.write.pepemate__leaveSession();
+    const tx = await worldContract.write.pepemate__leavePublic();
     await waitForTransaction(tx);
   };
 

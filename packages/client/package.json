@@ -44,6 +44,7 @@
     "use-resize-observer": "9.1.0",
     "vaul": "^1.1.2",
     "viem": "2.21.19",
+    "vite-plugin-vercel": "^9.0.4",
     "wagmi": "2.12.11"
   },
   "devDependencies": {

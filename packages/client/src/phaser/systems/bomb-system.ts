@@ -27,29 +27,35 @@ export function createBombSystem(layer: PhaserLayer) {
     network: {
       world,
       systemCalls: { triggerBomb },
-      components: { SessionState, Session, LocalSession, BombIndex, BombRange },
+      components: {
+        SessionMap,
+        EntitySession,
+        LocalSession,
+        BombIndex,
+        BombRange,
+      },
     },
   } = layer;
 
   defineSystem(
     world,
-    [Has(BombIndex), Has(Session)],
+    [Has(BombIndex), Has(EntitySession)],
     ({ entity, value, type, component }) => {
       const localSession = getComponentValue(LocalSession, singletonEntity);
       if (!localSession) return;
 
-      const session = getComponentValue(Session, entity);
+      const session = getComponentValue(EntitySession, entity);
       if (!session || session.session !== localSession.id) return;
 
       const sessionData = getComponentValue(
-        SessionState,
+        SessionMap,
         session.session as Entity
       );
       if (!sessionData) return;
 
-      const tileMap = toBytes(sessionData.map);
-
-      if (type === UpdateType.Update && component.id == BombIndex.id) {
+      const tileMap = toBytes(sessionData.terrain);
+      
+      if (type === UpdateType.Exit && component.id == BombIndex.id) {
         console.log("BOMB DETONATED", { entity, value, type });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const bombIndex = value[1] as any;

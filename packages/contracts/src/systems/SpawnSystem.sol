@@ -3,17 +3,8 @@ pragma solidity >=0.8.24;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {LibPlayer, LibTilemap, LibTile} from "../libraries/Libraries.sol";
-import {
-    Player,
-    Position,
-    TileLookup,
-    SessionState,
-    FireCount,
-    BombCount,
-    BombUsed,
-    Session,
-    PlayerIndex
-} from "../codegen/index.sol";
+import {Player, Position, FireCount, BombCount, BombUsed} from "../codegen/index.sol";
+import {EntitySession, Map, SessionMap, SessionPlayers, TileLookup} from "../codegen/index.sol";
 import {EntityType} from "../codegen/common.sol";
 import {BASE_BOMB_COUNT, BASE_BOMB_RANGE} from "../constants.sol";
 import {Entity} from "../Entity.sol";
@@ -21,14 +12,16 @@ import {Entity} from "../Entity.sol";
 contract SpawnSystem is System {
     function spawn() public {
         Entity entity = LibPlayer.entityKey(_msgSender());
-        Entity session = Session.get(entity);
+        Entity session = EntitySession.get(entity);
 
         require(!session.isEmpty(), "Session not found");
-        // require(Owner.get(entity) == _msgSender(), "Player is not controlled by sender");
         require(!Player.get(entity), "Player is alive");
 
-        uint8 index = PlayerIndex.get(entity);
-        uint32[4] memory spawnIndexes = SessionState.getSpawnIndexes(session);
+        bytes32[4] memory players = SessionPlayers.get(session);
+        (bool found, uint256 index) = LibPlayer.playerIndex(entity, players);
+        require(found, "Player not found in session");
+
+        uint32[4] memory spawnIndexes = Map.getSpawnIndexes(SessionMap.getMapId(session));
         _initPlayer(session, entity, spawnIndexes[index]);
     }
 

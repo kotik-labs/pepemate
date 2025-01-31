@@ -6,14 +6,14 @@ pragma solidity >=0.8.24;
 import { Entity } from "../../Entity.sol";
 
 /**
- * @title ISessionSystem
+ * @title IPublicSessionSystem
  * @author MUD (https://mud.dev) by Lattice (https://lattice.xyz)
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
-interface ISessionSystem {
-  function pepemate__createSession(uint256 id, bytes32 mapId) external returns (Entity session);
+interface IPublicSessionSystem {
+  function pepemate__createPublic(uint256 id, Entity map) external returns (Entity session);
 
-  function pepemate__joinSession(Entity session, uint8 playerIndex) external;
+  function pepemate__joinPublic(Entity session, uint8 playerIndex) external;
 
-  function pepemate__leaveSession() external;
+  function pepemate__leavePublic() external;
 }
