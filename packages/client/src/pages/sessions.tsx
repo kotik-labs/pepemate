@@ -20,7 +20,7 @@ export const SessionList = ({ worldContract }: SessionListProps) => {
     components: { Session },
   } = useNetworkLayer(worldContract);
 
-  const sessions = useEntityQuery([Has(Session)]);
+  const sessions = useEntityQuery([HasValue(Session, { sessionType: 1 })]);
 
   return (
     <div className="flex flex-col justify-start gap-4">
@@ -47,7 +47,7 @@ export const SessionItem = ({ worldContract, session }: SessionItemProps) => {
 
   const players = useEntityQuery([
     HasValue(EntitySession, { session }),
-    Has(Tick)
+    Has(Tick),
   ]);
 
   const playerCount = players.length;

@@ -95,7 +95,7 @@ export function createPlayerSystem(layer: PhaserLayer) {
           return;
         }
         
-        console.log("MOVE", { entity, value, type });
+        // console.log("MOVE", { entity, value, type });
         const [dirX, dirY] = directions(coord, prevCoord);
 
         objectPool.get(entity, "Sprite").setComponent({
