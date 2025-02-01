@@ -1,6 +1,6 @@
 import { Entity, setComponent } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Hex } from "viem";
 
 import { NetworkLayer, useNetworkLayer } from "@/hooks/use-network-layer";
@@ -29,6 +29,7 @@ export const GameHUD = ({ networkLayer, session }: GameHUDProps) => {
     systemCalls: { joinSession, leaveSession, spawn },
   } = networkLayer;
 
+  const navigate = useNavigate();
   const { players } = useSessionComponents(session as Entity);
 
   const playerStatuses = players.map((player, i) => (
@@ -38,7 +39,7 @@ export const GameHUD = ({ networkLayer, session }: GameHUDProps) => {
       playerEntity={player}
       playerIndex={i}
       onStart={() => joinSession(session, i).then(() => spawn())}
-      onLeave={() => leaveSession()}
+      onLeave={() => leaveSession().then(() => navigate("/"))}
     />
   ));
   return (
