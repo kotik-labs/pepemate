@@ -25,8 +25,6 @@ export const TilemapPreview = ({ terrain, width, height }: Props) => {
     const tileWidth = Math.floor(width / MAX_WIDTH);
     const tileHeight = Math.floor(height / MAX_HEIGHT);
 
-    console.log({ tileWidth, tileHeight });
-
     for (let y = 0; y < MAX_HEIGHT; y++) {
       for (let x = 0; x < MAX_WIDTH; x++) {
         const index = terrain[positionToIndex(x, y, MAX_WIDTH, MAX_HEIGHT)];

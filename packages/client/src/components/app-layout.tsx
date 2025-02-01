@@ -2,6 +2,7 @@ import { AccountButton } from "@latticexyz/entrykit/internal";
 import { Synced } from "@/components/mud/synced";
 import { Clouds } from "@/components/clouds";
 import { Outlet } from "react-router";
+import { Analytics } from "@vercel/analytics/react";
 
 export function AppLayout() {
   return (
@@ -25,6 +26,7 @@ export function AppLayout() {
       <div className="fixed z-0">
         <Clouds maxClouds={8} />
       </div>
+      <Analytics />
     </main>
   );
 }

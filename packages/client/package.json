@@ -28,6 +28,7 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-visually-hidden": "^1.1.1",
     "@tanstack/react-query": "^5.63.0",
+    "@vercel/analytics": "^1.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
     "contracts": "workspace:*",
@@ -60,7 +61,7 @@
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.7",
-    "vite-plugin-vercel": "^9.0.4",
-    "vite-plugin-mud": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc"
+    "vite-plugin-mud": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "vite-plugin-vercel": "^9.0.4"
   }
 }
