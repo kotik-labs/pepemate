@@ -6,7 +6,6 @@ import {
   defineMapConfig,
   defineCameraConfig,
 } from "@latticexyz/phaserx";
-import worldTileset from "@/../public/assets/tilesets/world.png";
 import { TileAnimations, Tileset } from "@/artTypes/world";
 import {
   TILE_ANIMATION_INTERVAL,
@@ -43,7 +42,7 @@ export const phaserConfig = {
         [Assets.Tileset]: {
           type: AssetType.Image,
           key: Assets.Tileset,
-          path: worldTileset,
+          path: "/assets/tilesets/world.png",
         },
         [Assets.MainAtlas]: {
           type: AssetType.MultiAtlas,
