@@ -55,9 +55,9 @@ contract TriggerBombSystem is System {
         for (uint256 i; i < tilesToUpdate.length; i++) {
             uint32 updateIndex = tilesToUpdate[i].index;
             if (updateIndex == 0) continue;
-            if (LibBomb.isUndestructable(tilesToUpdate[i].tile)) continue;
-
-            map = LibTilemap.putTile(map, updateIndex, TileType.Grass);
+            if (!LibBomb.isUndestructable(tilesToUpdate[i].tile)) {
+                map = LibTilemap.putTile(map, updateIndex, TileType.Grass);
+            }
 
             // generate random powerup if wall
             if (tilesToUpdate[i].tile == TileType.Wall) {
