@@ -5,7 +5,7 @@ import { Chain, Hex } from "viem";
 
 export const chainId = import.meta.env.CHAIN_ID || 31337;
 export const worldAddress = import.meta.env.WORLD_ADDRESS;
-export const startBlock = import.meta.env.START_BLOCK;
+export const startBlock = BigInt(import.meta.env.START_BLOCK ?? 0n);
 
 export const url = new URL(window.location.href);
 

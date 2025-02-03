@@ -8,10 +8,10 @@ import { MAX_TICKS_PER_BLOCK, ZERO_ENTITY } from "@/constants";
 import { cn, shorten } from "@/lib/utils";
 import { usePlayerComponents } from "@/hooks/use-player-components";
 
-import playerA from "../../../public/playerA.png";
-import playerB from "../../../public/playerB.png";
-import playerC from "../../../public/playerC.png";
-import playerD from "../../../public/playerD.png";
+import playerA from "@/static/playerA.png";
+import playerB from "@/static/playerB.png";
+import playerC from "@/static/playerC.png";
+import playerD from "@/static/playerD.png";
 
 export type PlayerStatusProps = {
   playerEntity: Entity;
