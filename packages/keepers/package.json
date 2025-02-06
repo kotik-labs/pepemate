@@ -1,0 +1,27 @@
+{
+  "name": "keepers",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@latticexyz/common": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
+    "@latticexyz/store-sync": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
+    "@latticexyz/utils": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
+    "@latticexyz/world": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
+    "@latticexyz/recs": "2.2.18-7106953abc5baa13ac87123cc58796f788dab05a",
+    "contracts": "workspace:*",
+    "@wagmi/core": "2.16.3",
+    "viem": "2.21.19",
+    "rxjs": "7.8.1"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.1",
+    "@types/node": "^18.0.3",
+    "ejs": "^3.1.10",
+    "glob": "^10.4.2",
+    "tsx": "4.19.2",
+    "typescript": "5.4.2"
+  }
+}

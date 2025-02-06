@@ -10,7 +10,7 @@ import { TileAnimationKey, Tileset } from "@/artTypes/world";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { drawAnimation } from "@/lib/game/drawing";
 import { getExplosionAnimations } from "@/lib/game/bomb";
-import { Hex, toBytes } from "viem";
+import { toBytes } from "viem";
 import { uuid } from "@latticexyz/utils";
 import { MAX_WIDTH } from "@/constants";
 
@@ -26,7 +26,6 @@ export function createBombSystem(layer: PhaserLayer) {
     },
     network: {
       world,
-      systemCalls: { triggerBomb },
       components: {
         SessionMap,
         EntitySession,
@@ -97,12 +96,6 @@ export function createBombSystem(layer: PhaserLayer) {
         };
 
         putAnimationAt(tileCoord, TileAnimationKey.Bomb, "Foreground");
-
-        setTimeout(() => {
-          triggerBomb(session.session as Hex, tileCoord.x, tileCoord.y);
-          triggerBomb(session.session as Hex, tileCoord.x, tileCoord.y);
-          triggerBomb(session.session as Hex, tileCoord.x, tileCoord.y);
-        }, 3000);
       }
     }
   );
