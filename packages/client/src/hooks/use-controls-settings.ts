@@ -11,7 +11,7 @@ const keyMapping: Record<string, string> = {
   ARROWRIGHT: "RIGHT",
 };
 
-export const useControls = () => {
+export const useControlsSettings = () => {
   const [controls, setControls] = useState(getBrowserControls());
   const [listeningFor, setListeningFor] = useState<Inputs | null>(null);
 

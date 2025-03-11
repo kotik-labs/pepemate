@@ -3,12 +3,12 @@ import { Entity } from "@latticexyz/recs";
 import { components } from "@/lib/mud/recs";
 import { ZERO_ENTITY } from "@/constants";
 
-const { Session, SessionMap, SessionPlayers } = components;
+const { MatchConfig, MatchTerrain, MatchPlayers } = components;
 
-export const useSessionComponents = (session: Entity) => {
-  const players = useComponentValue(SessionPlayers, session);
-  const map = useComponentValue(SessionMap, session);
-  const sessionType = useComponentValue(Session, session);
+export const useMatchComponents = (session: Entity) => {
+  const players = useComponentValue(MatchPlayers, session);
+  const map = useComponentValue(MatchTerrain, session);
+  const config = useComponentValue(MatchConfig, session);
 
   const playersArr = (players?.players || [
     ZERO_ENTITY,
@@ -18,8 +18,9 @@ export const useSessionComponents = (session: Entity) => {
   ]) as Entity[];
 
   return {
-    sessionType: sessionType?.sessionType,
-    map: { terrain: map?.terrain, mapId: map?.mapId },
+    sessionType: 0,
+    terrain: map?.terrain,
+    config,
     onlineCount: playersArr.filter((p) => p !== ZERO_ENTITY).length,
     players: playersArr,
   };

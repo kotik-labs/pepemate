@@ -16,18 +16,18 @@ export function createControlSystem(layer: PhaserLayer) {
     network: {
       world,
       playerEntity,
-      components: { LocalSession, EntitySession },
+      components: { LocalSession, MatchLookup },
       systemCalls: { spawn, move, placeBomb, batchMove },
     },
   } = layer;
 
-  defineEnterSystem(world, [Has(EntitySession)], ({ entity }) => {
+  defineEnterSystem(world, [Has(MatchLookup)], ({ entity }) => {
     if (entity !== playerEntity) return;
 
-    const session = getComponentValue(EntitySession, entity);
+    const session = getComponentValue(MatchLookup, entity);
     const localSession = getComponentValue(LocalSession, singletonEntity);
 
-    if (!session || !localSession || session.session !== localSession.id)
+    if (!session || !localSession || session.matchEntity !== localSession.id)
       return;
 
     input.pointerdown$.subscribe((event) => {

@@ -11,7 +11,7 @@ import { NotConnected } from "@/components/mud/not-connected";
 import { ControlsModal } from "@/components/controls-modal";
 import { components } from "@/lib/mud/recs";
 import { cn } from "@/lib/utils";
-import { useSessionComponents } from "@/hooks/use-sesssion-components";
+import { useMatchComponents } from "@/hooks/use-match-components";
 
 type Props = {
   worldContract: WorldContract;
@@ -26,11 +26,11 @@ type GameHUDProps = {
 export const GameHUD = ({ networkLayer, session }: GameHUDProps) => {
   const {
     playerEntity,
-    systemCalls: { joinSession, leaveSession, spawn },
+    systemCalls: { spawn },
   } = networkLayer;
 
   const navigate = useNavigate();
-  const { players } = useSessionComponents(session as Entity);
+  const { players } = useMatchComponents(session as Entity);
 
   const playerStatuses = players.map((player, i) => (
     <PlayerStatus
@@ -38,8 +38,8 @@ export const GameHUD = ({ networkLayer, session }: GameHUDProps) => {
       isSelf={player === playerEntity}
       playerEntity={player}
       playerIndex={i}
-      onStart={() => joinSession(session, i).then(() => spawn())}
-      onLeave={() => leaveSession().then(() => navigate("/"))}
+      onStart={() => spawn()}
+      onLeave={() => []}
     />
   ));
   return (

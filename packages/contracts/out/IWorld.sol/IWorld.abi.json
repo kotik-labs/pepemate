@@ -606,49 +606,7 @@
   },
   {
     "type": "function",
-    "name": "pepemate__createPublic",
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "map",
-        "type": "bytes32",
-        "internalType": "Entity"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "session",
-        "type": "bytes32",
-        "internalType": "Entity"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "pepemate__joinPublic",
-    "inputs": [
-      {
-        "name": "session",
-        "type": "bytes32",
-        "internalType": "Entity"
-      },
-      {
-        "name": "playerIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "pepemate__leavePublic",
+    "name": "pepemate__leaveSearch",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
@@ -693,6 +651,37 @@
   },
   {
     "type": "function",
+    "name": "pepemate__searchMatch",
+    "inputs": [
+      {
+        "name": "map",
+        "type": "bytes32",
+        "internalType": "Entity"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pepemate__settleMatch",
+    "inputs": [
+      {
+        "name": "mapEntity",
+        "type": "bytes32",
+        "internalType": "Entity"
+      },
+      {
+        "name": "players",
+        "type": "address[4]",
+        "internalType": "address[4]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "pepemate__spawn",
     "inputs": [],
     "outputs": [],
@@ -703,19 +692,9 @@
     "name": "pepemate__triggerBomb",
     "inputs": [
       {
-        "name": "session",
+        "name": "bomb",
         "type": "bytes32",
         "internalType": "Entity"
-      },
-      {
-        "name": "tileX",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "tileY",
-        "type": "uint32",
-        "internalType": "uint32"
       }
     ],
     "outputs": [],

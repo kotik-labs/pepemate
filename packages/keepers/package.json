@@ -6,14 +6,15 @@
     "dev": "tsx src/index.ts"
   },
   "dependencies": {
-    "@latticexyz/common": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
-    "@latticexyz/store-sync": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
-    "@latticexyz/utils": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
-    "@latticexyz/world": "2.2.18-6bd1695fe986f90478cfb8fe7fcc00a7a7df3e04",
-    "@latticexyz/recs": "2.2.18-7106953abc5baa13ac87123cc58796f788dab05a",
+    "@latticexyz/common": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/store-sync": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/utils": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/world": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/recs": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
     "contracts": "workspace:*",
     "@wagmi/core": "2.16.3",
     "viem": "2.21.19",
+    "lodash": "4.17.21",
     "rxjs": "7.8.1"
   },
   "devDependencies": {

@@ -11,6 +11,6 @@ contract WorldTest is MudTest {
     assembly {
       codeSize := extcodesize(addr)
     }
-    assertTrue(codeSize > 0);
+    assertGt(codeSize, 0);
   }
 }

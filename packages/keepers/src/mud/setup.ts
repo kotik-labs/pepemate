@@ -28,8 +28,8 @@ export async function setup(burnerAccount: Account) {
   return {
     world,
     components,
-    waitForTransaction,
     worldContract,
+    waitForTransaction,
     latestBlock$,
     storedBlockLogs$
   };

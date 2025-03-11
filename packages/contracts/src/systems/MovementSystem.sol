@@ -2,7 +2,10 @@
 pragma solidity >=0.8.24;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {LibPlayer, LibTilemap, LibTick, LibTile} from "../libraries/Libraries.sol";
+import {pickupPowerup} from "../libraries/LibPowerup.sol";
+import {getTileIndex} from "../libraries/LibTile.sol";
+import {applyMove} from "../libraries/LibPlayer.sol";
+import {updateTick} from "../libraries/LibTick.sol";
 import {
     Player,
     Position,
@@ -10,12 +13,14 @@ import {
     FireCount,
     BombCount,
     BombUsed,
-    EntitySession,
-    SessionMap,
+    MatchLookup,
+    MatchTerrain,
     LastBombIndex
 } from "../codegen/index.sol";
 import {Direction, EntityType, TileType} from "../codegen/common.sol";
-import {TILE_SIZE, BASE_SPEED, BASE_BOMB_COUNT, BASE_BOMB_RANGE, TILE_HALF, MOVE_COST} from "../constants.sol";
+import {
+    TILE_SIZE, BASE_SPEED, BASE_BOMB_COUNT, BASE_BOMB_RANGE, TILE_HALF, MOVE_COST, MAX_WIDTH
+} from "../constants.sol";
 import {Entity} from "../Entity.sol";
 
 function min(uint32 a, uint32 b) pure returns (uint32) {
@@ -24,58 +29,36 @@ function min(uint32 a, uint32 b) pure returns (uint32) {
 
 contract MovementSystem is System {
     function move(Direction direction) public {
-        _move(direction);
+        (Entity matchEntity, Entity player) = MatchLookup.get(_msgSender());
+        _move(direction, matchEntity, player);
     }
 
     function move(Direction direction, uint256 steps) public {
+        (Entity matchEntity, Entity player) = MatchLookup.get(_msgSender());
         for (uint256 i; i < steps; ++i) {
-            _move(direction);
+            _move(direction, matchEntity, player);
         }
     }
 
-    function _move(Direction direction) internal {
-        Entity entity = LibPlayer.entityKey(_msgSender());
-        Entity session = EntitySession.get(entity);
+    function _move(Direction direction, Entity matchEntity, Entity playerEntity) internal {
+        bytes memory map = MatchTerrain.getTerrain(matchEntity);
+        (uint32 oldX, uint32 oldY) = Position.get(playerEntity);
 
-        require(!session.isEmpty(), "Session not found");
-        // require(Owner.get(entity) == _msgSender(), "Player is not controlled by sender");
-        require(Player.get(entity), "Player is dead");
+        (uint32 nextX, uint32 nextY) = applyMove(matchEntity, playerEntity, oldX, oldY, direction, map);
+        uint32 oldIndex = getTileIndex(oldX, oldY, MAX_WIDTH);
+        uint32 nextIndex = getTileIndex(nextX, nextY, MAX_WIDTH);
 
-        bytes memory map = SessionMap.getTerrain(session);
-        (uint32 oldX, uint32 oldY) = Position.get(entity);
-        (uint32 nextX, uint32 nextY) = LibPlayer.move(map, oldX, oldY, BASE_SPEED, direction);
-
-        uint32 oldIndex = LibTile.getTileIndex(oldX, oldY);
-        uint32 nextIndex = LibTile.getTileIndex(nextX, nextY);
-        if (_blockedByPlayer(session, nextIndex, entity)) return;
-        if (_blockedByBomb(session, nextIndex, entity)) return;
-
-        _pickupPowerup(session, entity, map, nextIndex);
-        _updatePlayerLookup(session, entity, oldIndex, nextIndex);
-        Position.set(entity, nextX, nextY);
-        LibTick.update(entity, MOVE_COST);
+        _pickupPowerup(matchEntity, playerEntity, map, nextIndex);
+        _updatePlayerLookup(matchEntity, playerEntity, oldIndex, nextIndex);
+        Position.set(playerEntity, nextX, nextY);
+        updateTick(playerEntity, MOVE_COST);
     }
 
-    function _blockedByPlayer(Entity session, uint32 tileIndex, Entity player) internal view returns (bool) {
-        Entity otherPlayer = TileLookup.get(session, tileIndex, EntityType.Player);
-        return !otherPlayer.isEmpty() && !otherPlayer.equals(player);
-    }
-
-    function _blockedByBomb(Entity session, uint32 tileIndex, Entity player) internal returns (bool) {
-        uint32 bombIndex = LastBombIndex.get(player);
-        if (tileIndex == bombIndex) return false;
-        // reset bomb index if needed
-        if (bombIndex != 0) LastBombIndex.set(player, 0);
-
-        Entity bomb = TileLookup.get(session, tileIndex, EntityType.Bomb);
-        return !bomb.isEmpty();
-    }
-
-    function _pickupPowerup(Entity session, Entity entity, bytes memory map, uint32 tileIndex) internal {
+    function _pickupPowerup(Entity matchEntity, Entity entity, bytes memory map, uint32 tileIndex) internal {
         TileType powerUp;
-        (powerUp, map) = LibTilemap.pickupPowerup(map, tileIndex);
+        (powerUp, map) = pickupPowerup(map, tileIndex);
         if (powerUp != TileType.None) {
-            SessionMap.setTerrain(session, map);
+            MatchTerrain.setTerrain(matchEntity, map);
         }
 
         if (powerUp == TileType.RangeUp) {
@@ -87,9 +70,9 @@ contract MovementSystem is System {
         }
     }
 
-    function _updatePlayerLookup(Entity session, Entity entity, uint32 oldIndex, uint32 nextIndex) internal {
+    function _updatePlayerLookup(Entity matchEntity, Entity entity, uint32 oldIndex, uint32 nextIndex) internal {
         if (oldIndex == nextIndex) return;
-        TileLookup.deleteRecord(session, oldIndex, EntityType.Player);
-        TileLookup.set(session, nextIndex, EntityType.Player, entity);
+        TileLookup.deleteRecord(matchEntity, oldIndex, EntityType.Player);
+        TileLookup.set(matchEntity, nextIndex, EntityType.Player, entity);
     }
 }

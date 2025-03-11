@@ -16,12 +16,12 @@
     "test": "tsc --noEmit && mud test"
   },
   "dependencies": {
-    "@latticexyz/cli": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
-    "@latticexyz/entrykit": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
-    "@latticexyz/schema-type": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
-    "@latticexyz/store": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
-    "@latticexyz/world": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
-    "@latticexyz/world-modules": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc"
+    "@latticexyz/cli": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/entrykit": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/schema-type": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/store": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/world": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "@latticexyz/world-modules": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06"
   },
   "devDependencies": {
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
@@ -29,7 +29,7 @@
     "prettier": "3.2.5",
     "prettier-plugin-solidity": "1.3.1",
     "solhint": "^3.3.7",
-    "solhint-config-mud": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
-    "solhint-plugin-mud": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc"
+    "solhint-config-mud": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06",
+    "solhint-plugin-mud": "2.2.21-55dae5f5bb7b814e6f488432deb15a9a15b49b06"
   }
 }

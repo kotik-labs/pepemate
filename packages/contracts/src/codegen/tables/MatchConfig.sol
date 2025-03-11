@@ -19,17 +19,17 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 // Import user types
 import { Entity } from "../../Entity.sol";
 
-library Tick {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "Tick", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000005469636b000000000000000000000000);
+library MatchConfig {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "MatchConfig", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000004d61746368436f6e6669670000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0008020004040000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0028030004042000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x0008020003030000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint32, uint32, bytes32)
+  Schema constant _valueSchema = Schema.wrap(0x0028030003035f00000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -37,7 +37,7 @@ library Tick {
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "entity";
+    keyNames[0] = "matchEntity";
   }
 
   /**
@@ -45,9 +45,10 @@ library Tick {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](2);
-    fieldNames[0] = "lastBlock";
-    fieldNames[1] = "count";
+    fieldNames = new string[](3);
+    fieldNames[0] = "startBlock";
+    fieldNames[1] = "endBlock";
+    fieldNames[2] = "mapId";
   }
 
   /**
@@ -65,95 +66,137 @@ library Tick {
   }
 
   /**
-   * @notice Get lastBlock.
+   * @notice Get startBlock.
    */
-  function getLastBlock(Entity entity) internal view returns (uint32 lastBlock) {
+  function getStartBlock(Entity matchEntity) internal view returns (uint32 startBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get lastBlock.
+   * @notice Get startBlock.
    */
-  function _getLastBlock(Entity entity) internal view returns (uint32 lastBlock) {
+  function _getStartBlock(Entity matchEntity) internal view returns (uint32 startBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Set lastBlock.
+   * @notice Set startBlock.
    */
-  function setLastBlock(Entity entity, uint32 lastBlock) internal {
+  function setStartBlock(Entity matchEntity, uint32 startBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((lastBlock)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((startBlock)), _fieldLayout);
   }
 
   /**
-   * @notice Set lastBlock.
+   * @notice Set startBlock.
    */
-  function _setLastBlock(Entity entity, uint32 lastBlock) internal {
+  function _setStartBlock(Entity matchEntity, uint32 startBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((lastBlock)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((startBlock)), _fieldLayout);
   }
 
   /**
-   * @notice Get count.
+   * @notice Get endBlock.
    */
-  function getCount(Entity entity) internal view returns (uint32 count) {
+  function getEndBlock(Entity matchEntity) internal view returns (uint32 endBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Get count.
+   * @notice Get endBlock.
    */
-  function _getCount(Entity entity) internal view returns (uint32 count) {
+  function _getEndBlock(Entity matchEntity) internal view returns (uint32 endBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
   /**
-   * @notice Set count.
+   * @notice Set endBlock.
    */
-  function setCount(Entity entity, uint32 count) internal {
+  function setEndBlock(Entity matchEntity, uint32 endBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((count)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((endBlock)), _fieldLayout);
   }
 
   /**
-   * @notice Set count.
+   * @notice Set endBlock.
    */
-  function _setCount(Entity entity, uint32 count) internal {
+  function _setEndBlock(Entity matchEntity, uint32 endBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((count)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((endBlock)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get mapId.
+   */
+  function getMapId(Entity matchEntity) internal view returns (Entity mapId) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return Entity.wrap(bytes32(_blob));
+  }
+
+  /**
+   * @notice Get mapId.
+   */
+  function _getMapId(Entity matchEntity) internal view returns (Entity mapId) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return Entity.wrap(bytes32(_blob));
+  }
+
+  /**
+   * @notice Set mapId.
+   */
+  function setMapId(Entity matchEntity, Entity mapId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(Entity.unwrap(mapId)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set mapId.
+   */
+  function _setMapId(Entity matchEntity, Entity mapId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(Entity.unwrap(mapId)), _fieldLayout);
   }
 
   /**
    * @notice Get the full data.
    */
-  function get(Entity entity) internal view returns (uint32 lastBlock, uint32 count) {
+  function get(Entity matchEntity) internal view returns (uint32 startBlock, uint32 endBlock, Entity mapId) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
@@ -166,9 +209,9 @@ library Tick {
   /**
    * @notice Get the full data.
    */
-  function _get(Entity entity) internal view returns (uint32 lastBlock, uint32 count) {
+  function _get(Entity matchEntity) internal view returns (uint32 startBlock, uint32 endBlock, Entity mapId) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
@@ -181,14 +224,14 @@ library Tick {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(Entity entity, uint32 lastBlock, uint32 count) internal {
-    bytes memory _staticData = encodeStatic(lastBlock, count);
+  function set(Entity matchEntity, uint32 startBlock, uint32 endBlock, Entity mapId) internal {
+    bytes memory _staticData = encodeStatic(startBlock, endBlock, mapId);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -196,14 +239,14 @@ library Tick {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(Entity entity, uint32 lastBlock, uint32 count) internal {
-    bytes memory _staticData = encodeStatic(lastBlock, count);
+  function _set(Entity matchEntity, uint32 startBlock, uint32 endBlock, Entity mapId) internal {
+    bytes memory _staticData = encodeStatic(startBlock, endBlock, mapId);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -211,10 +254,12 @@ library Tick {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint32 lastBlock, uint32 count) {
-    lastBlock = (uint32(Bytes.getBytes4(_blob, 0)));
+  function decodeStatic(bytes memory _blob) internal pure returns (uint32 startBlock, uint32 endBlock, Entity mapId) {
+    startBlock = (uint32(Bytes.getBytes4(_blob, 0)));
 
-    count = (uint32(Bytes.getBytes4(_blob, 4)));
+    endBlock = (uint32(Bytes.getBytes4(_blob, 4)));
+
+    mapId = Entity.wrap(Bytes.getBytes32(_blob, 8));
   }
 
   /**
@@ -227,16 +272,16 @@ library Tick {
     bytes memory _staticData,
     EncodedLengths,
     bytes memory
-  ) internal pure returns (uint32 lastBlock, uint32 count) {
-    (lastBlock, count) = decodeStatic(_staticData);
+  ) internal pure returns (uint32 startBlock, uint32 endBlock, Entity mapId) {
+    (startBlock, endBlock, mapId) = decodeStatic(_staticData);
   }
 
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(Entity entity) internal {
+  function deleteRecord(Entity matchEntity) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -244,9 +289,9 @@ library Tick {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(Entity entity) internal {
+  function _deleteRecord(Entity matchEntity) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -255,8 +300,8 @@ library Tick {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint32 lastBlock, uint32 count) internal pure returns (bytes memory) {
-    return abi.encodePacked(lastBlock, count);
+  function encodeStatic(uint32 startBlock, uint32 endBlock, Entity mapId) internal pure returns (bytes memory) {
+    return abi.encodePacked(startBlock, endBlock, mapId);
   }
 
   /**
@@ -265,8 +310,12 @@ library Tick {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint32 lastBlock, uint32 count) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(lastBlock, count);
+  function encode(
+    uint32 startBlock,
+    uint32 endBlock,
+    Entity mapId
+  ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(startBlock, endBlock, mapId);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -277,9 +326,9 @@ library Tick {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(Entity entity) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(Entity matchEntity) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(entity);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
 
     return _keyTuple;
   }

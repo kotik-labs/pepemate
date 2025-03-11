@@ -30,7 +30,6 @@ const directions = (p0: Coord, p1: Coord) => {
   ];
 };
 
-
 export function createPlayerSystem(layer: PhaserLayer) {
   const {
     scenes: {
@@ -38,24 +37,18 @@ export function createPlayerSystem(layer: PhaserLayer) {
     },
     network: {
       world,
-      components: {
-        Player,
-        Position,
-        LocalSession,
-        EntitySession,
-        SessionPlayers,
-      },
+      components: { Player, Position, LocalSession, EntityMatch, MatchPlayers },
     },
   } = layer;
 
   defineSystem(
     world,
-    [HasValue(Player, { isPlayer: true }), Has(EntitySession), Has(Position)],
+    [HasValue(Player, { isPlayer: true }), Has(EntityMatch), Has(Position)],
     ({ entity, value, component, type }) => {
       const localSession = getComponentValue(LocalSession, singletonEntity);
       if (!localSession) return;
 
-      const session = getComponentValue(EntitySession, entity);
+      const session = getComponentValue(EntityMatch, entity);
       if (!session || session.session !== localSession.id) return;
 
       if (type === UpdateType.Exit) {
@@ -65,7 +58,7 @@ export function createPlayerSystem(layer: PhaserLayer) {
       }
 
       const { players }: { players: string[] } = getComponentValue(
-        SessionPlayers,
+        MatchPlayers,
         session.session as Entity
       ) || { players: [] };
 
@@ -87,6 +80,7 @@ export function createPlayerSystem(layer: PhaserLayer) {
         // update position
         const coord = value[0] as Coord;
         const prevCoord = value[1] as Coord;
+        console.log(coord);
 
         const spawned = prevCoord.x === 0 && prevCoord.y === 0;
         if (spawned) {
@@ -94,7 +88,7 @@ export function createPlayerSystem(layer: PhaserLayer) {
           drawPlayer(objectPool, entity, coord, texture);
           return;
         }
-        
+
         // console.log("MOVE", { entity, value, type });
         const [dirX, dirY] = directions(coord, prevCoord);
 

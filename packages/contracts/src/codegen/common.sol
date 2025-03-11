@@ -17,6 +17,8 @@ enum TileType {
   RangeUp,
   SpeedUp,
   BombsUp,
+  BlastBomb,
+  HolyShield,
   SpawnA,
   SpawnB,
   SpawnC,

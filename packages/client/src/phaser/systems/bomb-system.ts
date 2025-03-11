@@ -27,8 +27,8 @@ export function createBombSystem(layer: PhaserLayer) {
     network: {
       world,
       components: {
-        SessionMap,
-        EntitySession,
+        MatchTerrain,
+        EntityMatch,
         LocalSession,
         BombIndex,
         BombRange,
@@ -38,16 +38,16 @@ export function createBombSystem(layer: PhaserLayer) {
 
   defineSystem(
     world,
-    [Has(BombIndex), Has(EntitySession)],
+    [Has(BombIndex), Has(EntityMatch)],
     ({ entity, value, type, component }) => {
       const localSession = getComponentValue(LocalSession, singletonEntity);
       if (!localSession) return;
 
-      const session = getComponentValue(EntitySession, entity);
+      const session = getComponentValue(EntityMatch, entity);
       if (!session || session.session !== localSession.id) return;
 
       const sessionData = getComponentValue(
-        SessionMap,
+        MatchTerrain,
         session.session as Entity
       );
       if (!sessionData) return;

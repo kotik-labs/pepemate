@@ -24,12 +24,12 @@ library Map {
   ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d6174650000000000004d617000000000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0000000200000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0000000400000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint32[], bytes)
-  Schema constant _valueSchema = Schema.wrap(0x0000000265c40000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (string, string, uint32[], bytes)
+  Schema constant _valueSchema = Schema.wrap(0x00000004c5c565c4000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -45,9 +45,11 @@ library Map {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](2);
-    fieldNames[0] = "spawnIndexes";
-    fieldNames[1] = "terrain";
+    fieldNames = new string[](4);
+    fieldNames[0] = "name";
+    fieldNames[1] = "description";
+    fieldNames[2] = "spawnIndexes";
+    fieldNames[3] = "terrain";
   }
 
   /**
@@ -65,13 +67,337 @@ library Map {
   }
 
   /**
+   * @notice Get name.
+   */
+  function getName(Entity id) internal view returns (string memory name) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get name.
+   */
+  function _getName(Entity id) internal view returns (string memory name) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set name.
+   */
+  function setName(Entity id, string memory name) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((name)));
+  }
+
+  /**
+   * @notice Set name.
+   */
+  function _setName(Entity id, string memory name) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((name)));
+  }
+
+  /**
+   * @notice Get the length of name.
+   */
+  function lengthName(Entity id) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of name.
+   */
+  function _lengthName(Entity id) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of name.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemName(Entity id, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of name.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemName(Entity id, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to name.
+   */
+  function pushName(Entity id, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to name.
+   */
+  function _pushName(Entity id, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from name.
+   */
+  function popName(Entity id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Pop a slice from name.
+   */
+  function _popName(Entity id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Update a slice of name at `_index`.
+   */
+  function updateName(Entity id, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of name at `_index`.
+   */
+  function _updateName(Entity id, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Get description.
+   */
+  function getDescription(Entity id) internal view returns (string memory description) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get description.
+   */
+  function _getDescription(Entity id) internal view returns (string memory description) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set description.
+   */
+  function setDescription(Entity id, string memory description) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((description)));
+  }
+
+  /**
+   * @notice Set description.
+   */
+  function _setDescription(Entity id, string memory description) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((description)));
+  }
+
+  /**
+   * @notice Get the length of description.
+   */
+  function lengthDescription(Entity id) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of description.
+   */
+  function _lengthDescription(Entity id) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of description.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemDescription(Entity id, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of description.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemDescription(Entity id, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to description.
+   */
+  function pushDescription(Entity id, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to description.
+   */
+  function _pushDescription(Entity id, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from description.
+   */
+  function popDescription(Entity id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+  }
+
+  /**
+   * @notice Pop a slice from description.
+   */
+  function _popDescription(Entity id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+  }
+
+  /**
+   * @notice Update a slice of description at `_index`.
+   */
+  function updateDescription(Entity id, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of description at `_index`.
+   */
+  function _updateDescription(Entity id, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = Entity.unwrap(id);
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get spawnIndexes.
    */
   function getSpawnIndexes(Entity id) internal view returns (uint32[4] memory spawnIndexes) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
     return toStaticArray_uint32_4(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
@@ -82,7 +408,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
     return toStaticArray_uint32_4(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
@@ -93,7 +419,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)));
   }
 
   /**
@@ -103,7 +429,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)));
   }
 
   // The length of spawnIndexes
@@ -117,7 +443,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
     uint256 dynamicLength = _byteLength / 4;
     uint256 staticLength = 4;
 
@@ -126,7 +452,7 @@ library Map {
     }
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 4, (_index + 1) * 4);
       return (uint32(bytes4(_blob)));
     }
   }
@@ -139,7 +465,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
     uint256 dynamicLength = _byteLength / 4;
     uint256 staticLength = 4;
 
@@ -148,7 +474,7 @@ library Map {
     }
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 4, (_index + 1) * 4);
       return (uint32(bytes4(_blob)));
     }
   }
@@ -162,7 +488,7 @@ library Map {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -175,7 +501,7 @@ library Map {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -186,7 +512,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 3);
     return (bytes(_blob));
   }
 
@@ -197,7 +523,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 3);
     return (bytes(_blob));
   }
 
@@ -208,7 +534,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((terrain)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 3, bytes((terrain)));
   }
 
   /**
@@ -218,7 +544,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((terrain)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 3, bytes((terrain)));
   }
 
   /**
@@ -228,7 +554,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 3);
     unchecked {
       return _byteLength / 1;
     }
@@ -241,7 +567,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 3);
     unchecked {
       return _byteLength / 1;
     }
@@ -256,7 +582,7 @@ library Map {
     _keyTuple[0] = Entity.unwrap(id);
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 1, (_index + 1) * 1);
       return (bytes(_blob));
     }
   }
@@ -270,7 +596,7 @@ library Map {
     _keyTuple[0] = Entity.unwrap(id);
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 1, (_index + 1) * 1);
       return (bytes(_blob));
     }
   }
@@ -282,7 +608,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 3, bytes((_slice)));
   }
 
   /**
@@ -292,7 +618,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 3, bytes((_slice)));
   }
 
   /**
@@ -302,7 +628,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 3, 1);
   }
 
   /**
@@ -312,7 +638,7 @@ library Map {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 3, 1);
   }
 
   /**
@@ -324,7 +650,7 @@ library Map {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -337,14 +663,20 @@ library Map {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Get the full data.
    */
-  function get(Entity id) internal view returns (uint32[4] memory spawnIndexes, bytes memory terrain) {
+  function get(
+    Entity id
+  )
+    internal
+    view
+    returns (string memory name, string memory description, uint32[4] memory spawnIndexes, bytes memory terrain)
+  {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
@@ -359,7 +691,13 @@ library Map {
   /**
    * @notice Get the full data.
    */
-  function _get(Entity id) internal view returns (uint32[4] memory spawnIndexes, bytes memory terrain) {
+  function _get(
+    Entity id
+  )
+    internal
+    view
+    returns (string memory name, string memory description, uint32[4] memory spawnIndexes, bytes memory terrain)
+  {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
 
@@ -374,10 +712,16 @@ library Map {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(Entity id, uint32[4] memory spawnIndexes, bytes memory terrain) internal {
+  function set(
+    Entity id,
+    string memory name,
+    string memory description,
+    uint32[4] memory spawnIndexes,
+    bytes memory terrain
+  ) internal {
     bytes memory _staticData;
-    EncodedLengths _encodedLengths = encodeLengths(spawnIndexes, terrain);
-    bytes memory _dynamicData = encodeDynamic(spawnIndexes, terrain);
+    EncodedLengths _encodedLengths = encodeLengths(name, description, spawnIndexes, terrain);
+    bytes memory _dynamicData = encodeDynamic(name, description, spawnIndexes, terrain);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
@@ -388,10 +732,16 @@ library Map {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(Entity id, uint32[4] memory spawnIndexes, bytes memory terrain) internal {
+  function _set(
+    Entity id,
+    string memory name,
+    string memory description,
+    uint32[4] memory spawnIndexes,
+    bytes memory terrain
+  ) internal {
     bytes memory _staticData;
-    EncodedLengths _encodedLengths = encodeLengths(spawnIndexes, terrain);
-    bytes memory _dynamicData = encodeDynamic(spawnIndexes, terrain);
+    EncodedLengths _encodedLengths = encodeLengths(name, description, spawnIndexes, terrain);
+    bytes memory _dynamicData = encodeDynamic(name, description, spawnIndexes, terrain);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = Entity.unwrap(id);
@@ -405,17 +755,33 @@ library Map {
   function decodeDynamic(
     EncodedLengths _encodedLengths,
     bytes memory _blob
-  ) internal pure returns (uint32[4] memory spawnIndexes, bytes memory terrain) {
+  )
+    internal
+    pure
+    returns (string memory name, string memory description, uint32[4] memory spawnIndexes, bytes memory terrain)
+  {
     uint256 _start;
     uint256 _end;
     unchecked {
       _end = _encodedLengths.atIndex(0);
     }
-    spawnIndexes = toStaticArray_uint32_4(SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
+    name = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(1);
+    }
+    description = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(2);
+    }
+    spawnIndexes = toStaticArray_uint32_4(SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(3);
     }
     terrain = (bytes(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
   }
@@ -430,8 +796,12 @@ library Map {
     bytes memory,
     EncodedLengths _encodedLengths,
     bytes memory _dynamicData
-  ) internal pure returns (uint32[4] memory spawnIndexes, bytes memory terrain) {
-    (spawnIndexes, terrain) = decodeDynamic(_encodedLengths, _dynamicData);
+  )
+    internal
+    pure
+    returns (string memory name, string memory description, uint32[4] memory spawnIndexes, bytes memory terrain)
+  {
+    (name, description, spawnIndexes, terrain) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -459,12 +829,19 @@ library Map {
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
   function encodeLengths(
+    string memory name,
+    string memory description,
     uint32[4] memory spawnIndexes,
     bytes memory terrain
   ) internal pure returns (EncodedLengths _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = EncodedLengthsLib.pack(spawnIndexes.length * 4, bytes(terrain).length);
+      _encodedLengths = EncodedLengthsLib.pack(
+        bytes(name).length,
+        bytes(description).length,
+        spawnIndexes.length * 4,
+        bytes(terrain).length
+      );
     }
   }
 
@@ -472,8 +849,19 @@ library Map {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(uint32[4] memory spawnIndexes, bytes memory terrain) internal pure returns (bytes memory) {
-    return abi.encodePacked(EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)), bytes((terrain)));
+  function encodeDynamic(
+    string memory name,
+    string memory description,
+    uint32[4] memory spawnIndexes,
+    bytes memory terrain
+  ) internal pure returns (bytes memory) {
+    return
+      abi.encodePacked(
+        bytes((name)),
+        bytes((description)),
+        EncodeArray.encode(fromStaticArray_uint32_4(spawnIndexes)),
+        bytes((terrain))
+      );
   }
 
   /**
@@ -483,12 +871,14 @@ library Map {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
+    string memory name,
+    string memory description,
     uint32[4] memory spawnIndexes,
     bytes memory terrain
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData;
-    EncodedLengths _encodedLengths = encodeLengths(spawnIndexes, terrain);
-    bytes memory _dynamicData = encodeDynamic(spawnIndexes, terrain);
+    EncodedLengths _encodedLengths = encodeLengths(name, description, spawnIndexes, terrain);
+    bytes memory _dynamicData = encodeDynamic(name, description, spawnIndexes, terrain);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

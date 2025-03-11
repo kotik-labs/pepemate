@@ -9,7 +9,7 @@
  * an onchain component.
  */
 
-import { getComponentValue } from "@latticexyz/recs";
+import { Entity, getComponentValue } from "@latticexyz/recs";
 import { ClientComponents } from "./recs";
 import { Hex } from "viem";
 import { NetworkSetupResult } from "../../hooks/use-network-setup";
@@ -19,25 +19,35 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
   { playerEntity, worldContract, waitForTransaction }: NetworkSetupResult,
-  { Position }: ClientComponents
+  { Position, MatchLookup }: ClientComponents
 ) {
   const spawn = async () => {
     if (!playerEntity) throw new Error("no player");
 
-    const position = getComponentValue(Position, playerEntity);
-    if (position && !(position.x == 0 && position.y == 0)) {
-      console.warn("already spawned");
+    const match = getComponentValue(MatchLookup, playerEntity);
+    if (!match) {
+      console.warn("no match lookup data");
+      return;
+    }
+    const position = getComponentValue(Position, match.player as Entity);
+    if (position && position.x !== 0 && position.y !== 0) {
+      console.warn("Already spawned");
       return;
     }
 
     const tx = await worldContract.write.pepemate__spawn();
-    await waitForTransaction(tx);
+    console.log(await waitForTransaction(tx));
   };
 
   const move = async (direction: Direction) => {
     if (!playerEntity) throw new Error("no player");
 
-    const position = getComponentValue(Position, playerEntity);
+    const match = getComponentValue(MatchLookup, playerEntity);
+    if (!match) {
+      console.warn("no match lookup data");
+      return;
+    }
+    const position = getComponentValue(Position, match.player as Entity);
     if (!position || (position.x === 0 && position.y === 0)) {
       console.warn("cannot move without a player position, not yet spawned?");
       return;
@@ -50,9 +60,14 @@ export function createSystemCalls(
   const placeBomb = async () => {
     if (!playerEntity) throw new Error("no player");
 
-    const position = getComponentValue(Position, playerEntity);
+    const match = getComponentValue(MatchLookup, playerEntity);
+    if (!match) {
+      console.warn("no match lookup data");
+      return;
+    }
+    const position = getComponentValue(Position, match.player as Entity);
     if (!position || (position.x === 0 && position.y === 0)) {
-      console.warn("cannot move without a player position, not yet spawned?");
+      console.warn("cannot place bomb, not yet spawned?");
       return;
     }
 
@@ -60,28 +75,27 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
-  const triggerBomb = async (session: Hex, x: number, y: number) => {
-    const tx = await worldContract.write.pepemate__triggerBomb([session, x, y]);
+  const joinQueue = async (map: Hex) => {
+    const tx = await worldContract.write.pepemate__searchMatch([map]);
     await waitForTransaction(tx);
   };
 
-  const joinSession = async (session: Hex, playerIndex: number) => {
-    const tx = await worldContract.write.pepemate__joinPublic([
-      session,
-      playerIndex,
-    ]);
-    await waitForTransaction(tx);
-  };
-
-  const leaveSession = async () => {
-    const tx = await worldContract.write.pepemate__leavePublic();
+  const leaveQueue = async () => {
+    const tx = await worldContract.write.pepemate__leaveSearch();
     await waitForTransaction(tx);
   };
 
   const batchMove = async (direction: Direction, steps: number) => {
-    const position = getComponentValue(Position, playerEntity);
+    if (!playerEntity) throw new Error("no player");
+
+    const match = getComponentValue(MatchLookup, playerEntity);
+    if (!match) {
+      console.warn("no match lookup data");
+      return;
+    }
+    const position = getComponentValue(Position, match.player as Entity);
     if (!position || (position.x === 0 && position.y === 0)) {
-      console.warn("cannot move without a player position, not yet spawned?");
+      console.warn("cannot place bomb, not yet spawned?");
       return;
     }
 
@@ -96,9 +110,8 @@ export function createSystemCalls(
     spawn,
     move,
     placeBomb,
-    triggerBomb,
     batchMove,
-    joinSession,
-    leaveSession,
+    joinQueue,
+    leaveQueue,
   };
 }

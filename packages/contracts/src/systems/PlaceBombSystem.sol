@@ -6,7 +6,8 @@ import {
     Player,
     BombIndex,
     Position,
-    EntitySession,
+    MatchLookup,
+    EntityMatch,
     FireCount,
     BombCount,
     BombUsed,
@@ -16,36 +17,38 @@ import {
     LastBombIndex
 } from "../codegen/index.sol";
 import {TileType, EntityType} from "../codegen/common.sol";
-import {LibPlayer, LibBomb, LibTile, LibTick} from "../libraries/Libraries.sol";
-import {DIR_COUNT, PLANT_BOMB_COST} from "../constants.sol";
+import {getTileIndex} from "../libraries/LibTile.sol";
+import {updateTick} from "../libraries/LibTick.sol";
+import {DIR_COUNT, PLANT_BOMB_COST, MAX_WIDTH} from "../constants.sol";
+
 import {Entity} from "../Entity.sol";
+import {createEntity} from "../createEntity.sol";
 
 contract PlaceBombSystem is System {
     function placeBomb() public {
-        Entity player = LibPlayer.entityKey(_msgSender());
-        Entity session = EntitySession.get(player);
+        (Entity matchEntity, Entity player) = MatchLookup.get(_msgSender());
 
-        require(!session.isEmpty(), "Session not found");
+        require(!matchEntity.isEmpty(), "Session not found");
         require(Player.get(player), "Player is dead");
 
         (uint32 px, uint32 py) = Position.get(player);
-        uint32 tileIndex = LibTile.getTileIndex(px, py);
-        require(TileLookup.get(session, tileIndex, EntityType.Bomb).isEmpty(), "Bomb placed here already");
+        uint32 tileIndex = getTileIndex(px, py, MAX_WIDTH);
+        require(TileLookup.get(matchEntity, tileIndex, EntityType.Bomb).isEmpty(), "Bomb placed here already");
 
         uint32 max = BombCount.get(player);
         uint32 count = BombUsed.get(player);
         require(count < max, "No more bombs");
 
-        Entity bomb = LibBomb.entityKey(session, tileIndex);
+        Entity bomb = createEntity();
         BombIndex.set(bomb, tileIndex);
         BombOwner.set(bomb, player);
         BombRange.set(bomb, FireCount.get(player));
 
-        EntitySession.set(bomb, session);
-        TileLookup.set(session, tileIndex, EntityType.Bomb, bomb);
+        EntityMatch.set(bomb, matchEntity);
+        TileLookup.set(matchEntity, tileIndex, EntityType.Bomb, bomb);
 
         LastBombIndex.set(player, tileIndex);
         BombUsed.set(player, count + 1);
-        LibTick.update(player, PLANT_BOMB_COST);
+        updateTick(player, PLANT_BOMB_COST);
     }
 }

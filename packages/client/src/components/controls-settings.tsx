@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useControls } from "@/hooks/use-controls";
+import { useControlsSettings } from "@/hooks/use-controls-settings";
 import { Inputs } from "@/constants";
 
 export default function GameControlsSettings() {
-  const { controls, listen, listeningFor } = useControls();
+  const { controls, listen, listeningFor } = useControlsSettings();
 
   return (
     <div className="w-full flex flex-col gap-2">

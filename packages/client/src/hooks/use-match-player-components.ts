@@ -4,7 +4,7 @@ import { components } from "@/lib/mud/recs";
 
 const { Player, Tick, FireCount, BombCount, BombUsed } = components;
 
-export const usePlayerComponents = (player: Entity) => {
+export const useMatchPlayerComponents = (player: Entity) => {
   const isPlayer = useComponentValue(Player, player);
   const fireCount = useComponentValue(FireCount, player);
   const bombUsed = useComponentValue(BombUsed, player);

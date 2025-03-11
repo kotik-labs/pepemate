@@ -11,5 +11,5 @@ import { Entity } from "../../Entity.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ITriggerBombSystem {
-  function pepemate__triggerBomb(Entity session, uint32 tileX, uint32 tileY) external;
+  function pepemate__triggerBomb(Entity bomb) external;
 }

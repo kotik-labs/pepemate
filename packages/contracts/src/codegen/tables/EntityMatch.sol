@@ -19,9 +19,9 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 // Import user types
 import { Entity } from "../../Entity.sol";
 
-library EntitySession {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "EntitySession", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d617465000000000000456e7469747953657373696f6e000000);
+library EntityMatch {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "pepemate", name: "EntityMatch", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462706570656d617465000000000000456e746974794d617463680000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
@@ -37,7 +37,7 @@ library EntitySession {
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "id";
+    keyNames[0] = "entity";
   }
 
   /**
@@ -66,9 +66,9 @@ library EntitySession {
   /**
    * @notice Get session.
    */
-  function getSession(Entity id) internal view returns (Entity session) {
+  function getSession(Entity entity) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return Entity.wrap(bytes32(_blob));
@@ -77,9 +77,9 @@ library EntitySession {
   /**
    * @notice Get session.
    */
-  function _getSession(Entity id) internal view returns (Entity session) {
+  function _getSession(Entity entity) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return Entity.wrap(bytes32(_blob));
@@ -88,9 +88,9 @@ library EntitySession {
   /**
    * @notice Get session.
    */
-  function get(Entity id) internal view returns (Entity session) {
+  function get(Entity entity) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return Entity.wrap(bytes32(_blob));
@@ -99,9 +99,9 @@ library EntitySession {
   /**
    * @notice Get session.
    */
-  function _get(Entity id) internal view returns (Entity session) {
+  function _get(Entity entity) internal view returns (Entity session) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return Entity.wrap(bytes32(_blob));
@@ -110,9 +110,9 @@ library EntitySession {
   /**
    * @notice Set session.
    */
-  function setSession(Entity id, Entity session) internal {
+  function setSession(Entity entity, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
@@ -120,9 +120,9 @@ library EntitySession {
   /**
    * @notice Set session.
    */
-  function _setSession(Entity id, Entity session) internal {
+  function _setSession(Entity entity, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
@@ -130,9 +130,9 @@ library EntitySession {
   /**
    * @notice Set session.
    */
-  function set(Entity id, Entity session) internal {
+  function set(Entity entity, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
@@ -140,9 +140,9 @@ library EntitySession {
   /**
    * @notice Set session.
    */
-  function _set(Entity id, Entity session) internal {
+  function _set(Entity entity, Entity session) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(Entity.unwrap(session)), _fieldLayout);
   }
@@ -150,9 +150,9 @@ library EntitySession {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(Entity id) internal {
+  function deleteRecord(Entity entity) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -160,9 +160,9 @@ library EntitySession {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(Entity id) internal {
+  function _deleteRecord(Entity entity) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -193,9 +193,9 @@ library EntitySession {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(Entity id) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(Entity entity) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = Entity.unwrap(id);
+    _keyTuple[0] = Entity.unwrap(entity);
 
     return _keyTuple;
   }

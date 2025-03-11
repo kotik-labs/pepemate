@@ -10,26 +10,31 @@ import {
     Position,
     BombOwner,
     BombUsed,
-    SessionMap,
+    MatchTerrain,
     BombRange,
+    EntityMatch,
     TileLookup
 } from "../codegen/index.sol";
-import {LibBomb, LibTile, LibTilemap, LibUtils} from "../libraries/Libraries.sol";
-import {DIR_COUNT, PLANT_BOMB_COST} from "../constants.sol";
+import {coordToIndex} from "../libraries/LibTile.sol";
+import {getExplodedTiles, isUndestructable, Destruction} from "../libraries/LibBomb.sol";
+import {generatePowerup} from "../libraries/LibPowerup.sol";
+import {putTile} from "../libraries/LibTilemap.sol";
+import {rngSeed} from "../libraries/LibUtils.sol";
+import {DIR_COUNT, PLANT_BOMB_COST, MAX_WIDTH} from "../constants.sol";
 import {Entity} from "../Entity.sol";
 
 contract TriggerBombSystem is System {
-    function triggerBomb(Entity session, uint32 tileX, uint32 tileY) public {
+    function triggerBomb(Entity bomb) public {
         // TODO: fuse logic
-        uint32 tileIndex = LibTile.coordToIndex(tileX, tileY);
-        Entity bomb = LibBomb.entityKey(session, tileIndex);
-        if (BombIndex.get(bomb) == 0) return;
+        Entity session = EntityMatch.get(bomb);
+        uint32 tileIndex = BombIndex.get(bomb);
+        if (tileIndex == 0 || session.isEmpty()) return;
 
-        bytes memory map = SessionMap.getTerrain(session);
-        uint256 rng = LibUtils.rngSeed();
+        bytes memory map = MatchTerrain.getTerrain(session);
+        uint256 rng = rngSeed();
 
         (, map) = _triggerBomb(session, bomb, tileIndex, rng, map);
-        SessionMap.setTerrain(session, map);
+        MatchTerrain.setTerrain(session, map);
     }
 
     function _triggerBomb(Entity session, Entity bomb, uint32 tileIndex, uint256 rng_, bytes memory map_)
@@ -50,18 +55,18 @@ contract TriggerBombSystem is System {
         uint32 range = BombRange.get(bomb);
         bool megaBombPowerup = false; // tODO
 
-        LibBomb.Destruction[] memory tilesToUpdate = LibBomb.getExplodedTiles(map, tileIndex, range, megaBombPowerup);
+        Destruction[] memory tilesToUpdate = getExplodedTiles(map, tileIndex, range, megaBombPowerup);
 
         for (uint256 i; i < tilesToUpdate.length; i++) {
             uint32 updateIndex = tilesToUpdate[i].index;
             if (updateIndex == 0) continue;
-            if (!LibBomb.isUndestructable(tilesToUpdate[i].tile)) {
-                map = LibTilemap.putTile(map, updateIndex, TileType.Grass);
+            if (!isUndestructable(tilesToUpdate[i].tile)) {
+                map = putTile(map, updateIndex, TileType.Grass);
             }
 
             // generate random powerup if wall
             if (tilesToUpdate[i].tile == TileType.Wall) {
-                (rng, map) = LibTilemap.generatePowerup(map, updateIndex, rng);
+                (rng, map) = generatePowerup(map, updateIndex, rng);
                 continue;
             }
 

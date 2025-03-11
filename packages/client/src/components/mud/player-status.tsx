@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { MAX_TICKS_PER_BLOCK, ZERO_ENTITY } from "@/constants";
 import { cn, shorten } from "@/lib/utils";
-import { usePlayerComponents } from "@/hooks/use-player-components";
+import { useMatchPlayerComponents } from "@/hooks/use-match-player-components";
 
 import playerA from "@/static/playerA.png";
 import playerB from "@/static/playerB.png";
@@ -73,7 +73,7 @@ export const PlayerStatus = ({
     bombCount,
     bombUsed,
     tick: { count: tickCount },
-  } = usePlayerComponents(playerEntity);
+  } = useMatchPlayerComponents(playerEntity);
 
   const stamina = (tickCount / MAX_TICKS_PER_BLOCK) * 100;
   const [address] = decodeAbiParameters(

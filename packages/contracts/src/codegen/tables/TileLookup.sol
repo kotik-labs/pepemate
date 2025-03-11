@@ -38,7 +38,7 @@ library TileLookup {
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](3);
-    keyNames[0] = "session";
+    keyNames[0] = "matchEntity";
     keyNames[1] = "tileIndex";
     keyNames[2] = "entityType";
   }
@@ -69,9 +69,13 @@ library TileLookup {
   /**
    * @notice Get entity.
    */
-  function getEntity(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+  function getEntity(
+    Entity matchEntity,
+    uint32 tileIndex,
+    EntityType entityType
+  ) internal view returns (Entity entity) {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -82,9 +86,13 @@ library TileLookup {
   /**
    * @notice Get entity.
    */
-  function _getEntity(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+  function _getEntity(
+    Entity matchEntity,
+    uint32 tileIndex,
+    EntityType entityType
+  ) internal view returns (Entity entity) {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -95,9 +103,9 @@ library TileLookup {
   /**
    * @notice Get entity.
    */
-  function get(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+  function get(Entity matchEntity, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -108,9 +116,9 @@ library TileLookup {
   /**
    * @notice Get entity.
    */
-  function _get(Entity session, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
+  function _get(Entity matchEntity, uint32 tileIndex, EntityType entityType) internal view returns (Entity entity) {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -121,9 +129,9 @@ library TileLookup {
   /**
    * @notice Set entity.
    */
-  function setEntity(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+  function setEntity(Entity matchEntity, uint32 tileIndex, EntityType entityType, Entity entity) internal {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -133,9 +141,9 @@ library TileLookup {
   /**
    * @notice Set entity.
    */
-  function _setEntity(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+  function _setEntity(Entity matchEntity, uint32 tileIndex, EntityType entityType, Entity entity) internal {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -145,9 +153,9 @@ library TileLookup {
   /**
    * @notice Set entity.
    */
-  function set(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+  function set(Entity matchEntity, uint32 tileIndex, EntityType entityType, Entity entity) internal {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -157,9 +165,9 @@ library TileLookup {
   /**
    * @notice Set entity.
    */
-  function _set(Entity session, uint32 tileIndex, EntityType entityType, Entity entity) internal {
+  function _set(Entity matchEntity, uint32 tileIndex, EntityType entityType, Entity entity) internal {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -169,9 +177,9 @@ library TileLookup {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(Entity session, uint32 tileIndex, EntityType entityType) internal {
+  function deleteRecord(Entity matchEntity, uint32 tileIndex, EntityType entityType) internal {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -181,9 +189,9 @@ library TileLookup {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(Entity session, uint32 tileIndex, EntityType entityType) internal {
+  function _deleteRecord(Entity matchEntity, uint32 tileIndex, EntityType entityType) internal {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
@@ -217,12 +225,12 @@ library TileLookup {
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
   function encodeKeyTuple(
-    Entity session,
+    Entity matchEntity,
     uint32 tileIndex,
     EntityType entityType
   ) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = Entity.unwrap(session);
+    _keyTuple[0] = Entity.unwrap(matchEntity);
     _keyTuple[1] = bytes32(uint256(tileIndex));
     _keyTuple[2] = bytes32(uint256(uint8(entityType)));
 
